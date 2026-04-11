@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>REC-DS-005 | กรอกข้อมูลส่งมอบเอกสาร (EN)</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0a2e5a;--blue:#1558a8;--sky:#e8f1fb;
+  --green:#15803d;--green-bg:#f0fdf4;--green-bd:#86efac;
+  --red:#b91c1c;--red-bg:#fff1f2;--red-bd:#fca5a5;
+  --amber:#92400e;--amber-bg:#fffbeb;--amber-bd:#fcd34d;
+  --border:#e2e8f0;--text:#0f172a;--muted:#64748b;--faint:#94a3b8;
+  --bg:#f1f5f9;--surface:#fff;--r:10px;--rs:7px;
+  --sh:0 1px 3px rgba(0,0,0,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6}
+.wrap{max-width:800px;margin:0 auto;padding:1rem}
+.hdr{background:var(--navy);border-radius:14px;overflow:hidden;margin-bottom:12px;box-shadow:0 4px 20px rgba(10,46,90,.35)}
+.hdr-main{padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.logo-box{width:42px;height:42px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:rgba(255,255,255,.9);flex-shrink:0}
+.hdr-co{font-size:11px;color:rgba(255,255,255,.6);margin-bottom:2px}
+.hdr-title{font-size:15px;font-weight:700;color:#fff}
+.hdr-meta{text-align:right;font-size:11px;color:rgba(255,255,255,.5);line-height:1.9}
+.hdr-foot{background:rgba(255,255,255,.06);border-top:1px solid rgba(255,255,255,.08);padding:6px 1.25rem;display:flex;justify-content:flex-end;font-size:10.5px;color:rgba(255,255,255,.4)}
+.role-bar{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:.7rem 1rem;margin-bottom:12px;display:flex;align-items:center;gap:10px;box-shadow:var(--sh);flex-wrap:wrap}
+.rp{background:#1558a8;color:#fff;font-size:11px;font-weight:700;padding:4px 14px;border-radius:5px;letter-spacing:.5px}
+.rn{font-size:14px;font-weight:600;color:#1558a8}
+/* notif banner */
+.notif-bar{background:#fffbeb;border:1.5px solid #fcd34d;border-radius:var(--r);padding:.7rem 1rem;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.notif-bar span{font-size:12.5px;color:#92400e}
+.notif-bar button{background:#f59e0b;color:#fff;border:none;border-radius:6px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation}
+.notif-bar button:hover{background:#d97706}
+.notif-bar.on{background:#f0fdf4;border-color:#86efac}
+.notif-bar.on span{color:#15803d}
+.notif-bar.on button{display:none}
+.sec{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);margin-bottom:12px;overflow:hidden;box-shadow:var(--sh)}
+.sec-hd{padding:.7rem 1.1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:8px;background:#fafbfd;flex-wrap:wrap}
+.sec-hd-l{display:flex;align-items:center;gap:8px}
+.sec-tag{font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:4px;color:#fff}
+.sec-ttl{font-size:13.5px;font-weight:600;color:var(--navy)}
+.sec-bd{padding:1rem 1.1rem}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.f{display:flex;flex-direction:column;gap:5px}
+.f label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.f input,.f textarea{border:1.5px solid var(--border);border-radius:var(--rs);padding:9px 11px;font-size:14px;background:#fff;color:var(--text);font-family:inherit;transition:border .15s;-webkit-appearance:none}
+.f input:focus,.f textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(21,88,168,.1)}
+.f textarea{resize:vertical;min-height:64px}
+.sw{border:1.5px solid var(--border);border-radius:var(--rs);overflow:hidden}
+.sb{display:flex;justify-content:space-between;align-items:center;padding:6px 11px;background:#f8faff;border-bottom:1px solid var(--border);font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+.sb button{font-size:11px;color:var(--faint);background:none;border:1px solid var(--border);cursor:pointer;padding:2px 9px;border-radius:4px;font-family:inherit}
+.sb button:hover{background:var(--red-bg);border-color:var(--red-bd);color:var(--red)}
+canvas.sig{display:block;cursor:crosshair;touch-action:none;width:100%;background:#fdfeff}
+.sn{padding:6px 11px;border-top:1px solid var(--border);background:#fafbfc}
+.sn input{width:100%;border:none;font-size:13px;background:transparent;font-family:inherit;color:var(--text)}
+.sn input:focus{outline:none}
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table.dt{width:100%;border-collapse:collapse;font-size:13px;min-width:540px}
+table.dt thead{background:var(--navy)}
+table.dt th{color:#fff;font-weight:600;padding:9px 10px;text-align:left;font-size:11.5px;white-space:nowrap}
+table.dt td{padding:8px 10px;border-bottom:1px solid var(--border);color:var(--text);vertical-align:middle}
+table.dt tbody tr:hover td{background:var(--sky)}
+table.dt td input{width:100%;border:none;background:transparent;font-size:13px;color:var(--text);font-family:inherit}
+table.dt td input:focus{outline:none}
+.add-row{margin-top:8px;width:100%;padding:9px;border:1.5px dashed #93c5fd;border-radius:var(--rs);background:var(--sky);color:var(--blue);font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit}
+.add-row:hover{background:#dbeafe}
+.del-btn{background:none;border:none;cursor:pointer;color:#cbd5e1;font-size:16px;padding:1px 5px;border-radius:4px}
+.del-btn:hover{color:var(--red);background:var(--red-bg)}
+.btn-save{background:var(--navy);color:#fff;border:none;border-radius:var(--rs);padding:11px 28px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:.3px;transition:all .15s;touch-action:manipulation}
+.btn-save:hover{background:#0a2040}
+.btn-save:active{transform:scale(.97)}
+.btn-save:disabled{background:#94a3b8;cursor:not-allowed}
+.si{border:1.5px solid var(--border);border-radius:var(--rs);padding:10px 13px;margin-bottom:8px;background:#fff}
+.si:hover{border-color:#cbd5e1;background:#fafbfd}
+.si-date{font-size:13px;font-weight:700;color:var(--navy)}
+.si-who{font-size:12px;color:var(--muted)}
+.si-docs{font-size:12px;color:#475569;margin-top:3px;line-height:1.7}
+.badge{display:inline-flex;font-size:11px;font-weight:600;padding:2px 8px;border-radius:4px;border:1px solid}
+.badge.pend{color:var(--amber);background:var(--amber-bg);border-color:var(--amber-bd)}
+.badge.sent{color:var(--green);background:var(--green-bg);border-color:var(--green-bd)}
+/* modal */
+.overlay{display:none;position:fixed;inset:0;background:rgba(10,46,90,.55);backdrop-filter:blur(4px);z-index:100;align-items:center;justify-content:center;padding:1rem}
+.overlay.show{display:flex;animation:fd .2s ease}
+@keyframes fd{from{opacity:0}to{opacity:1}}
+.modal{background:#fff;border-radius:18px;padding:2.5rem 2rem;text-align:center;max-width:360px;width:100%;box-shadow:0 24px 64px rgba(0,0,0,.25)}
+.modal-icon{width:64px;height:64px;background:var(--green-bg);border:2px solid var(--green-bd);border-radius:50%;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:26px}
+.modal h2{font-size:18px;font-weight:700;color:var(--navy);margin-bottom:8px}
+.modal-note{font-size:12px;color:var(--green);background:var(--green-bg);border:1px solid var(--green-bd);border-radius:7px;padding:8px 12px;margin-bottom:14px;font-weight:500}
+.modal p{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:20px}
+.btn-modal{background:var(--navy);color:#fff;border:none;border-radius:var(--rs);padding:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;width:100%}
+.btn-modal:hover{background:#0a2040}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;border-radius:22px;padding:10px 22px;font-size:13px;font-weight:600;z-index:200;opacity:0;transition:opacity .25s;pointer-events:none;box-shadow:0 4px 20px rgba(0,0,0,.22);white-space:nowrap}
+.toast.show{opacity:1}
+@media(max-width:600px){
+  .wrap{padding:.75rem}
+  .hdr-meta{display:none}
+  .g2,.g3{grid-template-columns:1fr}
+  .btn-save{width:100%;padding:13px;font-size:15px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hdr">
+    <div class="hdr-main">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="logo-box">CPF</div>
+        <div>
+          <div class="hdr-co">บริษัท ซีพีเอฟ ฟู้ด แอนด์ เบฟเวอร์เรจ จำกัด (โรงงานอาหารสำเร็จรูปนครราชสีมา)</div>
+          <div class="hdr-title">แบบฟอร์มการส่งมอบเอกสารระหว่างหน่วยงาน</div>
+        </div>
+      </div>
+      <div class="hdr-meta">
+        <div>REC-DS-005 &nbsp;Rev : 02</div>
+        <div>01/04/26 &nbsp;|&nbsp; ฝ่าย EN</div>
+      </div>
+    </div>
+    <div class="hdr-foot"><span>Document Control — Internal Use Only</span></div>
+  </div>
+
+  <div class="role-bar">
+    <div class="rp">ลิงก์ที่ 1</div>
+    <div class="rn">ฝ่าย EN — กรอกข้อมูลส่งมอบเอกสาร</div>
+  </div>
+
+  <!-- Notification bar -->
+  <div class="notif-bar" id="notifBar">
+    <span id="notifMsg">🔔 เปิดใช้การแจ้งเตือน เพื่อให้ระบบแจ้งเตือนในเบราว์เซอร์ได้</span>
+    <button onclick="requestNotif()">เปิดการแจ้งเตือน</button>
+  </div>
+
+  <!-- STEP 1 -->
+  <div class="sec">
+    <div class="sec-hd">
+      <div class="sec-hd-l">
+        <span class="sec-tag" style="background:var(--navy)">STEP 1</span>
+        <span class="sec-ttl">ข้อมูลการส่งมอบเอกสาร</span>
+      </div>
+    </div>
+    <div class="sec-bd">
+      <div class="f" style="max-width:240px;margin-bottom:16px"><label>วันที่ส่งเอกสาร</label><input type="date" id="s1date"></div>
+      <div class="f" style="max-width:320px">
+        <label>ผู้ส่งเอกสาร (EN) — ลายเซ็น</label>
+        <div class="sw" style="margin-top:4px">
+          <div class="sb"><span>วาดลายเซ็น</span><button onclick="clearSig('sigS')">ล้าง</button></div>
+          <canvas class="sig" id="sigS" height="95"></canvas>
+          <div class="sn"><input type="text" id="senderName" placeholder="ชื่อ-นามสกุล ผู้ส่งเอกสาร (EN)"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- รายการเอกสาร -->
+  <div class="sec">
+    <div class="sec-hd">
+      <div class="sec-hd-l">
+        <span class="sec-tag" style="background:#334155">รายละเอียด</span>
+        <span class="sec-ttl">รายการเอกสารส่งมอบ</span>
+      </div>
+      <button class="btn-save" id="saveBtn" onclick="saveRecord()">📤 ส่งข้อมูลและแจ้งเตือน WH</button>
+    </div>
+    <div class="sec-bd">
+      <div class="tw">
+        <table class="dt">
+          <thead><tr>
+            <th style="width:32px">#</th>
+            <th style="min-width:200px">ชื่อเอกสาร / รายละเอียดเอกสาร</th>
+            <th style="width:70px">จำนวน (ชุด)</th>
+            <th style="min-width:110px">Supplier</th>
+            <th style="min-width:105px">หมายเลข PO</th>
+            <th style="min-width:105px">หมายเลขเอกสาร</th>
+            <th style="width:28px"></th>
+          </tr></thead>
+          <tbody id="docBody"></tbody>
+        </table>
+      </div>
+      <button class="add-row" onclick="addRow()">＋ เพิ่มแถว</button>
+    </div>
+  </div>
+
+  <!-- หมายเหตุ -->
+  <div class="sec">
+    <div class="sec-bd" style="padding:.85rem 1.1rem">
+      <div class="f"><label>หมายเหตุ</label><textarea id="s1remark" placeholder="หมายเหตุเพิ่มเติม (ถ้ามี)"></textarea></div>
+    </div>
+  </div>
+
+  <!-- ประวัติ -->
+  <div id="savedSection" style="display:none">
+    <div class="sec">
+      <div class="sec-hd">
+        <div class="sec-hd-l">
+          <span class="sec-tag" style="background:#475569">ประวัติ</span>
+          <span class="sec-ttl">รายการที่ส่งแล้ว</span>
+        </div>
+      </div>
+      <div class="sec-bd"><div id="savedItems"></div></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- MODAL -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="modal-icon">✓</div>
+    <h2>ส่งข้อมูลสำเร็จ!</h2>
+    <div class="modal-note">🔔 แจ้งเตือนไปยังฝ่ายคลังพัสดุแล้ว</div>
+    <p>ข้อมูลถูกบันทึกเรียบร้อยแล้ว<br>พร้อมกรอกรายการใหม่</p>
+    <button class="btn-modal" onclick="closeModal()">บันทึกรายการใหม่</button>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ══ ตั้งค่า ══
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbxqQ4QtaL5iV6Jtm5xTiHZgIGK0BBBsxABUaaNJKpx9Y-8DK_PkWw9603pPRQGxQrVK/exec'; // ใส่ Apps Script URL ที่นี่
+const WH_NOTIF_KEY = 'rec_ds_005_notif_sub'; // key เก็บ subscription
+// ════════════
+
+let records = JSON.parse(localStorage.getItem('rec_ds_005_en') || '[]');
+let rowCount = 0;
+const sigState = {};
+
+function toast(msg,dur=2800){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),dur);}
+
+// ── BROWSER NOTIFICATION ──
+function requestNotif(){
+  if(!('Notification' in window)){toast('เบราว์เซอร์นี้ไม่รองรับการแจ้งเตือน');return;}
+  Notification.requestPermission().then(perm=>{
+    if(perm==='granted'){
+      updateNotifBar(true);
+      toast('✓ เปิดการแจ้งเตือนแล้ว');
+      new Notification('REC-DS-005',{body:'เปิดการแจ้งเตือนสำเร็จ ✓',icon:''});
+    } else {
+      toast('กรุณาอนุญาตการแจ้งเตือนในการตั้งค่าเบราว์เซอร์');
+    }
+  });
+}
+
+function updateNotifBar(granted){
+  const bar=document.getElementById('notifBar');
+  const msg=document.getElementById('notifMsg');
+  if(granted){
+    bar.classList.add('on');
+    msg.textContent='✓ การแจ้งเตือนเปิดใช้งานแล้ว';
+  }
+}
+
+function sendBrowserNotif(title, body){
+  if(Notification.permission==='granted'){
+    new Notification(title,{body,icon:'',tag:'rec-ds-005'});
+  }
+}
+
+// ── SIG ──
+function initSig(id){
+  const c=document.getElementById(id);if(!c)return;
+  c.width=c.offsetWidth||320;
+  const ctx=c.getContext('2d');ctx.lineWidth=2;ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle='#1e293b';
+  sigState[id]={drawing:false,ctx,canvas:c};
+  const pos=e=>{const r=c.getBoundingClientRect(),s=e.touches?e.touches[0]:e;return{x:(s.clientX-r.left)*(c.width/r.width),y:(s.clientY-r.top)*(c.height/r.height)};};
+  c.addEventListener('mousedown',e=>{sigState[id].drawing=true;const p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);});
+  c.addEventListener('mousemove',e=>{if(!sigState[id].drawing)return;const p=pos(e);ctx.lineTo(p.x,p.y);ctx.stroke();});
+  ['mouseup','mouseleave'].forEach(ev=>c.addEventListener(ev,()=>sigState[id].drawing=false));
+  c.addEventListener('touchstart',e=>{e.preventDefault();sigState[id].drawing=true;const p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);},{passive:false});
+  c.addEventListener('touchmove',e=>{e.preventDefault();if(!sigState[id].drawing)return;const p=pos(e);ctx.lineTo(p.x,p.y);ctx.stroke();},{passive:false});
+  c.addEventListener('touchend',()=>sigState[id].drawing=false);
+}
+function clearSig(id){const s=sigState[id];if(s)s.ctx.clearRect(0,0,s.canvas.width,s.canvas.height);}
+
+// ── TABLE ──
+function addRow(){
+  rowCount++;
+  const tr=document.createElement('tr');
+  tr.innerHTML=`<td style="text-align:center;color:var(--faint);font-size:12px">${rowCount}</td>
+    <td><input type="text" placeholder="ชื่อเอกสาร / รายละเอียด"></td>
+    <td><input type="text" placeholder="0" style="text-align:center"></td>
+    <td><input type="text" placeholder="Supplier"></td>
+    <td><input type="text" placeholder="PO-"></td>
+    <td><input type="text" placeholder="เลขเอกสาร"></td>
+    <td><button class="del-btn" onclick="this.closest('tr').remove();renum()">×</button></td>`;
+  document.getElementById('docBody').appendChild(tr);
+}
+function renum(){document.querySelectorAll('#docBody tr').forEach((tr,i)=>tr.cells[0].textContent=i+1);rowCount=document.querySelectorAll('#docBody tr').length;}
+
+function resetForm(){
+  document.getElementById('s1date').value=new Date().toISOString().slice(0,10);
+  ['senderName','s1remark'].forEach(id=>document.getElementById(id).value='');
+  clearSig('sigS');
+  document.getElementById('docBody').innerHTML='';rowCount=0;
+  for(let i=0;i<3;i++) addRow();
+}
+
+// ── SAVE ──
+async function saveRecord(){
+  const date=document.getElementById('s1date').value;
+  const sender=document.getElementById('senderName').value.trim();
+  const remark=document.getElementById('s1remark').value.trim();
+  const items=[];
+  document.querySelectorAll('#docBody tr').forEach(tr=>{
+    const ins=tr.querySelectorAll('input');
+    if(ins[0].value.trim()) items.push({docName:ins[0].value.trim(),qty:ins[1].value.trim()||'0',supplier:ins[2].value.trim(),po:ins[3].value.trim(),docNo:ins[4].value.trim()});
+  });
+  if(!date||items.length===0){toast('กรุณากรอกวันที่และรายการเอกสารอย่างน้อย 1 รายการ');return;}
+  const btn=document.getElementById('saveBtn');
+  btn.disabled=true;btn.textContent='กำลังส่ง...';
+
+  const id='R'+Date.now();
+  const rec={id,date,receiver:'',sender,remark,items,status:'pending',savedAt:new Date().toLocaleString('th-TH')};
+  records.unshift(rec);
+  localStorage.setItem('rec_ds_005_en',JSON.stringify(records));
+
+  // ส่ง Sheets
+  if(SHEET_URL){
+    try{await fetch(SHEET_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:'en_saveRecord',...rec})});}
+    catch(e){console.warn(e);}
+  }
+
+  // Browser Notification แจ้ง WH (ถ้าเปิดในเครื่องเดียวกัน)
+  sendBrowserNotif(
+    '📋 มีเอกสารใหม่จาก EN',
+    `วันที่ ${date} | ผู้ส่ง: ${sender||'-'} | ${items.length} รายการ\nกรุณาเปิดลิงก์ที่ 2 เพื่อตรวจสอบ`
+  );
+
+  btn.disabled=false;btn.textContent='📤 ส่งข้อมูลและแจ้งเตือน WH';
+  renderSaved();
+  document.getElementById('overlay').classList.add('show');
+}
+function closeModal(){document.getElementById('overlay').classList.remove('show');resetForm();}
+
+function renderSaved(){
+  const sec=document.getElementById('savedSection');
+  const el=document.getElementById('savedItems');
+  if(!records.length){sec.style.display='none';return;}
+  sec.style.display='block';
+  el.innerHTML=records.map(r=>`
+    <div class="si">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:6px;margin-bottom:4px">
+        <div><span class="si-date">${r.date}</span><span class="si-who"> — ${r.sender||'(ไม่ระบุ)'} → ${r.receiver||'(ไม่ระบุ)'}</span></div>
+        <span class="badge pend">รอ WH</span>
+      </div>
+      <div class="si-docs">${r.items.map(it=>`${it.docName} (${it.qty} ชุด)${it.po?' · PO '+it.po:''}${it.docNo?' · '+it.docNo:''}`).join(' | ')}</div>
+    </div>`).join('');
+}
+
+window.addEventListener('load',()=>{
+  for(let i=0;i<3;i++) addRow();
+  initSig('sigS');
+  renderSaved();
+  document.getElementById('s1date').value=new Date().toISOString().slice(0,10);
+  // เช็คสถานะ Notification
+  if('Notification' in window && Notification.permission==='granted') updateNotifBar(true);
+});
+</script>
+</body>
+</html>
