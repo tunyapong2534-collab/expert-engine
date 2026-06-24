@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>ระบบนับสต๊อกอะไหล่ | SPARE PART</title>
+<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0a2e5a;--blue:#1558a8;--sky:#e8f1fb;
+  --green:#15803d;--green-bg:#f0fdf4;--green-bd:#86efac;--green-dk:#14532d;
+  --red:#b91c1c;--red-bg:#fff1f2;--red-bd:#fca5a5;
+  --amber:#92400e;--amber-bg:#fffbeb;--amber-bd:#fcd34d;
+  --purple:#4c1d95;--purple-bg:#f5f3ff;--purple-bd:#c4b5fd;
+  --border:#e2e8f0;--text:#0f172a;--muted:#64748b;--faint:#94a3b8;
+  --bg:#f1f5f9;--surface:#fff;--r:10px;--rs:7px;
+  --sh:0 1px 3px rgba(0,0,0,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6}
+.wrap{max-width:1000px;margin:0 auto;padding:1rem}
+/* Header */
+.hdr{background:var(--navy);border-radius:14px;overflow:hidden;margin-bottom:12px;box-shadow:0 4px 20px rgba(10,46,90,.35)}
+.hdr-main{padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.logo-box{width:46px;height:46px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:rgba(255,255,255,.9);flex-shrink:0;text-align:center;line-height:1.3}
+.hdr-co{font-size:11px;color:rgba(255,255,255,.6);margin-bottom:2px}
+.hdr-title{font-size:16px;font-weight:700;color:#fff}
+.hdr-sub{font-size:11.5px;color:rgba(255,255,255,.65);margin-top:2px}
+.hdr-meta{text-align:right;font-size:11px;color:rgba(255,255,255,.5);line-height:1.9}
+.hdr-foot{background:rgba(255,255,255,.06);border-top:1px solid rgba(255,255,255,.08);padding:6px 1.25rem;display:flex;justify-content:space-between;align-items:center;font-size:10.5px;color:rgba(255,255,255,.4)}
+/* Tabs */
+.tabs{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:5px;margin-bottom:12px;display:flex;gap:4px;box-shadow:var(--sh);overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tabs::-webkit-scrollbar{height:0}
+.tabs button{flex-shrink:0;padding:8px 13px;border:none;border-radius:var(--rs);background:transparent;font-size:12.5px;font-weight:500;cursor:pointer;font-family:inherit;color:var(--muted);transition:all .15s;white-space:nowrap}
+.tabs button.active{background:var(--navy);color:#fff;font-weight:700;box-shadow:0 2px 8px rgba(10,46,90,.3)}
+.tabs button:hover:not(.active){background:#f1f5f9;color:var(--navy)}
+.tab{display:none}.tab.active{display:block}
+/* Cards/Sections */
+.sec{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);margin-bottom:12px;overflow:hidden;box-shadow:var(--sh)}
+.sec-hd{padding:.7rem 1.1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:8px;background:#fafbfd;flex-wrap:wrap}
+.sec-hd-l{display:flex;align-items:center;gap:8px}
+.sec-tag{font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:4px;color:#fff}
+.sec-ttl{font-size:13.5px;font-weight:600;color:var(--navy)}
+.sec-bd{padding:1rem 1.1rem}
+/* Stats */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.stat{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--rs);padding:12px 10px;text-align:center;box-shadow:var(--sh)}
+.stat-lbl{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+.stat-num{font-size:22px;font-weight:700;color:var(--text);margin-top:3px}
+.stat-num.blue{color:#1558a8}.stat-num.green{color:var(--green)}.stat-num.amber{color:#d97706}.stat-num.red{color:var(--red)}
+/* Forms */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.f{display:flex;flex-direction:column;gap:5px}
+.f label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.f input,.f select,.f textarea{border:1.5px solid var(--border);border-radius:var(--rs);padding:9px 11px;font-size:14px;background:#fff;color:var(--text);font-family:inherit;transition:border .15s;-webkit-appearance:none}
+.f input:focus,.f select:focus,.f textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(21,88,168,.1)}
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:6px;border:none;border-radius:var(--rs);padding:9px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s;touch-action:manipulation}
+.btn-primary{background:var(--navy);color:#fff}.btn-primary:hover{background:#0a2040}
+.btn-green{background:var(--green-dk);color:#fff}.btn-green:hover{background:#166534}
+.btn-blue{background:#1558a8;color:#fff}.btn-blue:hover{background:#0e3f80}
+.btn-amber{background:#d97706;color:#fff}.btn-amber:hover{background:#b45309}
+.btn-outline{background:#fff;color:var(--navy);border:1.5px solid var(--navy)}.btn-outline:hover{background:var(--sky)}
+.btn-sm{padding:6px 12px;font-size:12px}
+.btn-danger{background:#fff;color:var(--red);border:1.5px solid var(--red-bd)}.btn-danger:hover{background:var(--red-bg)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+/* Table */
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table.dt{width:100%;border-collapse:collapse;font-size:12.5px;min-width:560px}
+table.dt thead{background:var(--navy)}
+table.dt th{color:#fff;font-weight:600;padding:9px 10px;text-align:left;font-size:11.5px;white-space:nowrap}
+table.dt td{padding:7px 10px;border-bottom:1px solid var(--border);color:var(--text);vertical-align:middle}
+table.dt tbody tr:hover td{background:var(--sky)}
+table.dt td input{width:100%;border:1.5px solid var(--border);border-radius:5px;padding:5px 8px;font-size:12.5px;font-family:inherit;background:#fff}
+table.dt td input:focus{outline:none;border-color:var(--blue)}
+/* Badge */
+.badge{display:inline-flex;font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:4px;border:1px solid;white-space:nowrap}
+.badge-blue{color:#1558a8;background:#eff6ff;border-color:#93c5fd}
+.badge-green{color:var(--green);background:var(--green-bg);border-color:var(--green-bd)}
+.badge-amber{color:var(--amber);background:var(--amber-bg);border-color:var(--amber-bd)}
+.badge-red{color:var(--red);background:var(--red-bg);border-color:var(--red-bd)}
+.badge-purple{color:var(--purple);background:var(--purple-bg);border-color:var(--purple-bd)}
+.badge-gray{color:#475569;background:#f8fafc;border-color:var(--border)}
+/* Rack Grid */
+.rack-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.rack-card{border:2px solid var(--border);border-radius:var(--r);padding:14px 12px;cursor:pointer;transition:all .15s;background:#fff;user-select:none;text-align:center;position:relative}
+.rack-card:hover{border-color:#93c5fd;background:var(--sky)}
+.rack-card.selected{border-color:#1558a8;background:#eff6ff;box-shadow:0 0 0 3px rgba(21,88,168,.15)}
+.rack-card.selected::after{content:'✓';position:absolute;top:6px;right:8px;font-size:14px;font-weight:700;color:#1558a8}
+.rack-card .rk-name{font-size:20px;font-weight:700;color:var(--navy);margin-bottom:4px}
+.rack-card .rk-count{font-size:11px;color:var(--muted)}
+.rack-card .rk-week{font-size:10px;font-weight:600;margin-top:5px;padding:2px 7px;border-radius:3px;display:inline-block}
+.wk1{background:#dbeafe;color:#1e40af}.wk2{background:#dcfce7;color:#15803d}
+.wk3{background:#fef3c7;color:#92400e}.wk4{background:#f3e8ff;color:#6b21a8}
+/* Week plan strip */
+.week-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.wk-box{border-radius:var(--r);padding:12px;border:2px solid transparent;cursor:pointer;transition:all .15s}
+.wk-box:hover{opacity:.85}
+.wk-box.wk1{background:#dbeafe;border-color:#93c5fd}.wk-box.wk2{background:#dcfce7;border-color:#86efac}
+.wk-box.wk3{background:#fef3c7;border-color:#fcd34d}.wk-box.wk4{background:#f3e8ff;border-color:#c4b5fd}
+.wk-box.active-week .wk-num{border-color:currentColor}
+.wk-num{font-size:11px;font-weight:700;margin-bottom:4px}
+.wk-date{font-size:10px;opacity:.8}
+.wk-racks{font-size:13px;font-weight:700;margin-top:6px}
+/* Upload zone */
+.upload-zone{border:2.5px dashed #93c5fd;border-radius:var(--r);padding:2.5rem 1.5rem;text-align:center;background:var(--sky);cursor:pointer;transition:all .2s}
+.upload-zone:hover,.upload-zone.drag{border-color:#1558a8;background:#dbeafe}
+.upload-zone p{color:var(--muted);font-size:13px;margin-top:8px}
+.upload-zone .upload-icon{font-size:36px;margin-bottom:8px}
+/* Progress */
+.progress-bar{height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden;margin-top:6px}
+.progress-fill{height:100%;border-radius:4px;background:#1558a8;transition:width .4s}
+/* Count diff */
+.diff-plus{color:var(--red);font-weight:600}
+.diff-minus{color:var(--amber);font-weight:600}
+.diff-zero{color:var(--green);font-weight:600}
+/* Location embed */
+.loc-frame{border-radius:var(--r);overflow:hidden;border:1px solid var(--border);margin-top:10px}
+.loc-frame iframe{width:100%;height:420px;border:none;display:block}
+/* Label preview */
+.label-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.label-card{border:2px solid var(--border);border-radius:8px;padding:12px;background:#fff;text-align:center;position:relative}
+.label-card .lc-code{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:2px}
+.label-card .lc-desc{font-size:10.5px;color:var(--muted);margin-bottom:6px;line-height:1.4;min-height:28px}
+.label-card .lc-rack{font-size:10px;color:var(--muted);margin-top:4px}
+.label-card svg{max-width:100%;height:40px}
+.label-card .lc-sel{position:absolute;top:6px;right:6px;width:18px;height:18px;border:2px solid var(--border);border-radius:4px;cursor:pointer;background:#fff;transition:all .15s}
+.label-card.selected .lc-sel{background:#1558a8;border-color:#1558a8}
+.label-card.selected .lc-sel::after{content:'✓';color:#fff;font-size:11px;position:absolute;top:-1px;left:2px}
+/* Toast */
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;border-radius:22px;padding:10px 22px;font-size:13px;font-weight:600;z-index:300;opacity:0;transition:opacity .25s;pointer-events:none;box-shadow:0 4px 20px rgba(0,0,0,.22);white-space:nowrap}
+.toast.show{opacity:1}
+/* Info box */
+.info-box{background:var(--sky);border:1px solid #93c5fd;border-radius:var(--rs);padding:.75rem 1rem;font-size:12.5px;color:#1e40af;margin-bottom:12px}
+/* Search */
+.search-bar{display:flex;gap:8px;align-items:center;margin-bottom:12px;flex-wrap:wrap}
+.search-bar input{flex:1;min-width:200px;border:1.5px solid var(--border);border-radius:var(--rs);padding:9px 11px;font-size:13.5px;font-family:inherit;background:#fff}
+.search-bar input:focus{outline:none;border-color:var(--blue)}
+/* Divider */
+.divider{border:none;border-top:1px solid var(--border);margin:14px 0}
+/* Checkbox */
+input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:#1558a8}
+/* Counted highlight */
+tr.counted td{background:#f0fdf4}
+tr.diff-row td{background:#fff1f2}
+/* Floor plan mockup */
+.floor-plan{background:#f8fafc;border:1px solid var(--border);border-radius:var(--r);padding:1rem;position:relative;overflow:hidden}
+.fp-title{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:10px}
+.fp-grid{display:grid;grid-template-columns:1fr 1.8fr;gap:10px}
+.fp-zone{display:flex;flex-direction:column;gap:6px}
+.fp-rack{border-radius:6px;padding:8px 10px;font-size:11.5px;font-weight:700;text-align:center;cursor:pointer;border:2px solid transparent;transition:all .15s}
+.fp-rack:hover{opacity:.8}
+.fp-rack.wk1{background:#dbeafe;color:#1e40af;border-color:#93c5fd}
+.fp-rack.wk2{background:#dcfce7;color:#15803d;border-color:#86efac}
+.fp-rack.wk3{background:#fef3c7;color:#92400e;border-color:#fcd34d}
+.fp-rack.wk4{background:#f3e8ff;color:#6b21a8;border-color:#c4b5fd}
+.fp-rack.selected-rack{box-shadow:0 0 0 3px rgba(21,88,168,.4);transform:scale(1.05)}
+.fp-row{display:grid;gap:6px}
+/* ===== PRINT STYLES ===== */
+@media print{
+  body{background:#fff;font-size:11pt}
+  .tabs,.hdr-foot,.no-print,.search-bar .btn,.sec-hd button{display:none!important}
+  .hdr{border-radius:0;box-shadow:none;background:#0a2e5a!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .wrap{max-width:100%;padding:0}
+  .sec{box-shadow:none;border:1px solid #ccc;margin-bottom:8pt;break-inside:avoid}
+  table.dt th{background:#0a2e5a!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .tab{display:block!important}
+  .tab:not(.print-active){display:none!important}
+  .print-pg-break{page-break-before:always}
+}
+@media print{
+  .label-print-area{display:grid!important;grid-template-columns:repeat(3,1fr);gap:6mm;padding:8mm}
+  .label-print-card{border:1px solid #ccc;border-radius:4px;padding:6px;text-align:center;break-inside:avoid}
+  .label-print-card .lp-code{font-size:9pt;font-weight:700;margin-bottom:1px}
+  .label-print-card .lp-desc{font-size:7.5pt;color:#444;margin-bottom:3px;line-height:1.3}
+  .label-print-card .lp-rack{font-size:7pt;color:#666}
+  .label-print-card svg{height:32px;max-width:100%}
+}
+@media(max-width:680px){
+  .stats-row{grid-template-columns:repeat(2,1fr)}
+  .week-strip{grid-template-columns:repeat(2,1fr)}
+  .g2,.g3{grid-template-columns:1fr}
+  .rack-grid{grid-template-columns:repeat(3,1fr)}
+}
+</style>
+
+<script>
+const LOCATION_DB = {"31184741": {"rack": "A", "loc": "AA02", "col": 2}, "31184743": {"rack": "A", "loc": "AA02", "col": 3}, "31188242": {"rack": "A", "loc": "AA02", "col": 4}, "31188247": {"rack": "A", "loc": "AA02", "col": 5}, "31191782": {"rack": "A", "loc": "AA02", "col": 7}, "31187286": {"rack": "A", "loc": "AA02", "col": 8}, "31191957": {"rack": "A", "loc": "AA02", "col": 9}, "31198205": {"rack": "A", "loc": "AA02", "col": 10}, "31198500": {"rack": "A", "loc": "AA02", "col": 11}, "31187098": {"rack": "A", "loc": "AA02", "col": 13}, "31184742": {"rack": "A", "loc": "AA02", "col": 2}, "31184740": {"rack": "A", "loc": "AA02", "col": 3}, "31187099": {"rack": "A", "loc": "AA02", "col": 4}, "31188580": {"rack": "A", "loc": "AA02", "col": 5}, "31190523": {"rack": "A", "loc": "AA02", "col": 6}, "31191783": {"rack": "A", "loc": "AA02", "col": 7}, "31187289": {"rack": "A", "loc": "AA02", "col": 8}, "31195482": {"rack": "A", "loc": "AA02", "col": 9}, "31194784": {"rack": "A", "loc": "AA02", "col": 10}, "31196230": {"rack": "A", "loc": "AA02", "col": 11}, "31204375": {"rack": "A", "loc": "AA02", "col": 12}, "31187097": {"rack": "A", "loc": "AA02", "col": 13}, "31194015": {"rack": "A", "loc": "AA02", "col": 2}, "31194023": {"rack": "A", "loc": "AA02", "col": 4}, "31194027": {"rack": "A", "loc": "AA02", "col": 5}, "31194031": {"rack": "A", "loc": "AA02", "col": 6}, "31191990": {"rack": "A", "loc": "AA02", "col": 8}, "31191985": {"rack": "A", "loc": "AA02", "col": 9}, "31198490": {"rack": "A", "loc": "AA02", "col": 10}, "31199712": {"rack": "A", "loc": "AA02", "col": 11}, "31194016": {"rack": "A", "loc": "AA02", "col": 2}, "31194024": {"rack": "A", "loc": "AA02", "col": 4}, "31194028": {"rack": "A", "loc": "AA02", "col": 5}, "31194032": {"rack": "A", "loc": "AA02", "col": 6}, "31194035": {"rack": "A", "loc": "AA02", "col": 7}, "31191745": {"rack": "A", "loc": "AA02", "col": 8}, "31199714": {"rack": "A", "loc": "AA02", "col": 9}, "31198491": {"rack": "A", "loc": "AA02", "col": 10}, "31198576": {"rack": "A", "loc": "AA02", "col": 11}, "31194017": {"rack": "A", "loc": "AA03", "col": 2}, "31194025": {"rack": "A", "loc": "AA03", "col": 4}, "31194029": {"rack": "A", "loc": "AA03", "col": 5}, "31194033": {"rack": "A", "loc": "AA03", "col": 6}, "31194038": {"rack": "A", "loc": "AA03", "col": 7}, "31191744": {"rack": "A", "loc": "AA03", "col": 8}, "31199715": {"rack": "A", "loc": "AA03", "col": 9}, "31199486": {"rack": "A", "loc": "AA03", "col": 10}, "31198810": {"rack": "A", "loc": "AA03", "col": 11}, "31194018": {"rack": "A", "loc": "AA03", "col": 2}, "31194022": {"rack": "A", "loc": "AA03", "col": 3}, "31194026": {"rack": "A", "loc": "AA03", "col": 4}, "31194030": {"rack": "A", "loc": "AA03", "col": 5}, "31194034": {"rack": "A", "loc": "AA03", "col": 6}, "31194287": {"rack": "A", "loc": "AA03", "col": 7}, "31191743": {"rack": "A", "loc": "AA03", "col": 8}, "31198977": {"rack": "A", "loc": "AA03", "col": 9}, "31199489": {"rack": "A", "loc": "AA03", "col": 10}, "31198976": {"rack": "A", "loc": "AA03", "col": 11}, "31180909": {"rack": "A", "loc": "AA03", "col": 12}, "31204743": {"rack": "A", "loc": "AA03", "col": 3}, "31207039": {"rack": "A", "loc": "AB02", "col": 2}, "31204744": {"rack": "A", "loc": "AB02", "col": 3}, "31205424": {"rack": "A", "loc": "AB02", "col": 4}, "31203976": {"rack": "A", "loc": "AB02", "col": 5}, "31206811": {"rack": "A", "loc": "AB02", "col": 2}, "31204745": {"rack": "A", "loc": "AB02", "col": 3}, "31205416": {"rack": "A", "loc": "AB02", "col": 4}, "31202974": {"rack": "A", "loc": "AB02", "col": 5}, "31206798": {"rack": "A", "loc": "AB02", "col": 9}, "31207963": {"rack": "A", "loc": "AB02", "col": 5}, "31207960": {"rack": "A", "loc": "AB02", "col": 6}, "31207956": {"rack": "A", "loc": "AB02", "col": 7}, "31206477": {"rack": "A", "loc": "AB02", "col": 9}, "31197564": {"rack": "A", "loc": "AB03", "col": 2}, "31207962": {"rack": "A", "loc": "AB03", "col": 5}, "31209162": {"rack": "A", "loc": "AB03", "col": 6}, "31208441": {"rack": "A", "loc": "AB03", "col": 7}, "31206800": {"rack": "A", "loc": "AB03", "col": 8}, "31206474": {"rack": "A", "loc": "AB03", "col": 9}, "31181702": {"rack": "A", "loc": "AB03", "col": 10}, "31198577": {"rack": "A", "loc": "AB03", "col": 2}, "31195307": {"rack": "A", "loc": "AB03", "col": 3}, "31203247": {"rack": "A", "loc": "AB03", "col": 4}, "31207961": {"rack": "A", "loc": "AB03", "col": 5}, "31209161": {"rack": "A", "loc": "AB03", "col": 6}, "31207967": {"rack": "A", "loc": "AB03", "col": 7}, "31206803": {"rack": "A", "loc": "AB03", "col": 8}, "31205423": {"rack": "A", "loc": "AB03", "col": 9}, "31160954": {"rack": "A", "loc": "AB03", "col": 10}, "31452963": {"rack": "N", "loc": "NA02", "col": 4}, "31455864": {"rack": "N", "loc": "NA02", "col": 9}, "31457919": {"rack": "N", "loc": "NA02", "col": 11}, "31452957": {"rack": "N", "loc": "NA02", "col": 3}, "31452960": {"rack": "N", "loc": "NA02", "col": 4}, "31454965": {"rack": "N", "loc": "NA02", "col": 5}, "31454963": {"rack": "N", "loc": "NA02", "col": 6}, "31454973": {"rack": "N", "loc": "NA02", "col": 7}, "31456349": {"rack": "N", "loc": "NA02", "col": 9}, "31451948": {"rack": "G", "loc": "GA01", "col": 3}, "31452959": {"rack": "G", "loc": "GA01", "col": 4}, "31452962": {"rack": "G", "loc": "GA01", "col": 5}, "31454962": {"rack": "G", "loc": "GA01", "col": 6}, "31454972": {"rack": "G", "loc": "GA01", "col": 7}, "31456417": {"rack": "G", "loc": "GA01", "col": 8}, "31456348": {"rack": "G", "loc": "GA01", "col": 9}, "31457917": {"rack": "G", "loc": "GA01", "col": 11}, "31452739": {"rack": "G", "loc": "GA01", "col": 2}, "31451947": {"rack": "G", "loc": "GA01", "col": 3}, "31452958": {"rack": "G", "loc": "GA01", "col": 4}, "31452961": {"rack": "G", "loc": "GA01", "col": 5}, "31452964": {"rack": "G", "loc": "GA01", "col": 6}, "31454970": {"rack": "G", "loc": "GA01", "col": 7}, "31455345": {"rack": "G", "loc": "GA01", "col": 8}, "31456347": {"rack": "G", "loc": "GA01", "col": 9}, "31460350": {"rack": "G", "loc": "GA01", "col": 10}, "31457916": {"rack": "G", "loc": "GA01", "col": 11}, "31455956": {"rack": "G", "loc": "GA01", "col": 12}, "31452956": {"rack": "G", "loc": "GA02", "col": 2}, "31455323": {"rack": "G", "loc": "GA02", "col": 3}, "31341423": {"rack": "G", "loc": "GA02", "col": 6}, "31457873": {"rack": "G", "loc": "GA02", "col": 8}, "31457875": {"rack": "G", "loc": "GA02", "col": 10}, "31457879": {"rack": "G", "loc": "GA02", "col": 12}, "31457914": {"rack": "G", "loc": "GA02", "col": 10}, "31457912": {"rack": "G", "loc": "GA02", "col": 11}, "31457913": {"rack": "G", "loc": "GA03", "col": 12}, "31188231": {"rack": "G", "loc": "GA03", "col": 2}, "31294490": {"rack": "G", "loc": "GA03", "col": 4}, "31294491": {"rack": "G", "loc": "GA03", "col": 6}, "31457918": {"rack": "G", "loc": "GA03", "col": 8}, "31457880": {"rack": "G", "loc": "GA03", "col": 10}, "31348875": {"rack": "G", "loc": "GA03", "col": 1}, "31205618": {"rack": "G", "loc": "GA03", "col": 3}, "31476257": {"rack": "G", "loc": "GA03", "col": 9}, "31454971": {"rack": "G", "loc": "GA03", "col": 10}, "31454966": {"rack": "G", "loc": "GA03", "col": 11}, "31349496": {"rack": "G", "loc": "GA03", "col": 2}, "31351654": {"rack": "G", "loc": "GA03", "col": 2}, "31357292": {"rack": "G", "loc": "GA03", "col": 3}, "31352092": {"rack": "G", "loc": "GA03", "col": 6}, "31346450": {"rack": "G", "loc": "GA03", "col": 7}, "31351695": {"rack": "G", "loc": "GA03", "col": 10}, "31355155": {"rack": "G", "loc": "GA03", "col": 11}, "31348631": {"rack": "G", "loc": "GA03", "col": 12}, "31357291": {"rack": "G", "loc": "GA03", "col": 2}, "31359297": {"rack": "G", "loc": "GA03", "col": 3}, "31356078": {"rack": "G", "loc": "GA03", "col": 4}, "31352180": {"rack": "G", "loc": "GA03", "col": 5}, "31351653": {"rack": "G", "loc": "GA03", "col": 6}, "31360036": {"rack": "G", "loc": "GA03", "col": 7}, "31344124": {"rack": "G", "loc": "GA03", "col": 8}, "31355352": {"rack": "G", "loc": "GA03", "col": 9}, "31355151": {"rack": "G", "loc": "GA03", "col": 10}, "31355154": {"rack": "G", "loc": "GA03", "col": 11}, "31348630": {"rack": "G", "loc": "GA03", "col": 12}, "31356480": {"rack": "E", "loc": "EA01", "col": 2}, "31360091": {"rack": "E", "loc": "EA01", "col": 3}, "31355484": {"rack": "E", "loc": "EA01", "col": 4}, "31357563": {"rack": "E", "loc": "EA01", "col": 5}, "31350309": {"rack": "E", "loc": "EA01", "col": 6}, "31349033": {"rack": "E", "loc": "EA01", "col": 7}, "31344125": {"rack": "E", "loc": "EA01", "col": 8}, "31355351": {"rack": "E", "loc": "EA01", "col": 9}, "31348822": {"rack": "E", "loc": "EA01", "col": 10}, "31355153": {"rack": "E", "loc": "EA01", "col": 11}, "31348627": {"rack": "E", "loc": "EA01", "col": 12}, "31353571": {"rack": "E", "loc": "EA01", "col": 2}, "31474627": {"rack": "E", "loc": "EA01", "col": 3}, "31355445": {"rack": "E", "loc": "EA01", "col": 4}, "31354242": {"rack": "E", "loc": "EA01", "col": 5}, "31359183": {"rack": "E", "loc": "EA01", "col": 6}, "31350730": {"rack": "E", "loc": "EA01", "col": 7}, "31350081": {"rack": "E", "loc": "EA01", "col": 8}, "31355350": {"rack": "E", "loc": "EA01", "col": 9}, "31348820": {"rack": "E", "loc": "EA01", "col": 10}, "31355152": {"rack": "E", "loc": "EA01", "col": 11}, "31348626": {"rack": "E", "loc": "EA01", "col": 12}, "31348749": {"rack": "E", "loc": "EA01", "col": 2}, "31348752": {"rack": "E", "loc": "EA01", "col": 4}, "31360038": {"rack": "E", "loc": "EA01", "col": 6}, "31348750": {"rack": "E", "loc": "EA02", "col": 2}, "31348751": {"rack": "E", "loc": "EA02", "col": 4}, "31349497": {"rack": "E", "loc": "EA02", "col": 6}, "31361054": {"rack": "E", "loc": "EA02", "col": 7}, "31352085": {"rack": "E", "loc": "EA02", "col": 8}, "31352086": {"rack": "E", "loc": "EA02", "col": 9}, "31348662": {"rack": "E", "loc": "EA02", "col": 10}, "31348661": {"rack": "E", "loc": "EA02", "col": 11}, "31341629": {"rack": "E", "loc": "EA02", "col": 12}, "31341630": {"rack": "E", "loc": "EA02", "col": 13}, "31354241": {"rack": "E", "loc": "EA03", "col": 5}, "31330970": {"rack": "E", "loc": "EA03", "col": 13}, "31466409": {"rack": "E", "loc": "EA03", "col": 5}, "31466410": {"rack": "E", "loc": "EA03", "col": 5}, "31466756": {"rack": "E", "loc": "EA03", "col": 11}, "31467084": {"rack": "E", "loc": "EA03", "col": 13}, "31466412": {"rack": "K", "loc": "KB01", "col": 5}, "31323869": {"rack": "K", "loc": "KB01", "col": 10}, "31466674": {"rack": "K", "loc": "KB01", "col": 11}, "31467086": {"rack": "K", "loc": "KB01", "col": 12}, "31467085": {"rack": "K", "loc": "KB01", "col": 13}, "31468636": {"rack": "K", "loc": "KB01", "col": 2}, "31468668": {"rack": "K", "loc": "KB01", "col": 3}, "31468565": {"rack": "K", "loc": "KB01", "col": 4}, "31421214": {"rack": "K", "loc": "KB01", "col": 5}, "31474735": {"rack": "K", "loc": "KB01", "col": 10}, "31474734": {"rack": "K", "loc": "KB01", "col": 11}, "31467123": {"rack": "K", "loc": "KB01", "col": 12}, "31467083": {"rack": "K", "loc": "KB01", "col": 13}, "31474628": {"rack": "K", "loc": "KB01", "col": 6}, "31474616": {"rack": "K", "loc": "KB02", "col": 6}, "31467122": {"rack": "K", "loc": "KB02", "col": 11}, "31348823": {"rack": "K", "loc": "KB02", "col": 2}, "31360035": {"rack": "K", "loc": "KB02", "col": 7}, "31350993": {"rack": "K", "loc": "KB03", "col": 3}, "31349498": {"rack": "K", "loc": "KB03", "col": 8}, "31350538": {"rack": "K", "loc": "KB03", "col": 10}, "31454456": {"rack": "K", "loc": "KB03", "col": 11}, "31423324": {"rack": "K", "loc": "KB03", "col": 2}, "31451115": {"rack": "K", "loc": "KB03", "col": 3}, "31451113": {"rack": "K", "loc": "KB03", "col": 4}, "31448975": {"rack": "K", "loc": "KB03", "col": 5}, "31425799": {"rack": "K", "loc": "KB03", "col": 6}, "31424717": {"rack": "K", "loc": "KB03", "col": 7}, "31450193": {"rack": "K", "loc": "KB03", "col": 8}, "31361047": {"rack": "K", "loc": "KB03", "col": 9}, "31291517": {"rack": "C", "loc": "CA03", "col": 9}, "31257241": {"rack": "C", "loc": "CA03", "col": 2}, "31259044": {"rack": "C", "loc": "CA03", "col": 3}, "31271481": {"rack": "C", "loc": "CA03", "col": 4}, "31271482": {"rack": "C", "loc": "CA03", "col": 6}, "31262414": {"rack": "C", "loc": "CA03", "col": 7}, "31226441": {"rack": "C", "loc": "CA03", "col": 8}, "31277047": {"rack": "C", "loc": "CA03", "col": 9}, "31230014": {"rack": "C", "loc": "CA03", "col": 10}, "41091551": {"rack": "C", "loc": "CA03", "col": 2}, "31184822": {"rack": "C", "loc": "CA03", "col": 3}, "31230965": {"rack": "C", "loc": "CA03", "col": 2}, "31230966": {"rack": "C", "loc": "CA03", "col": 3}, "31230967": {"rack": "C", "loc": "CA03", "col": 4}, "31230968": {"rack": "C", "loc": "CA03", "col": 2}, "41122642": {"rack": "C", "loc": "CA03", "col": 3}, "31472104": {"rack": "C", "loc": "CA03", "col": 4}, "31467089": {"rack": "C", "loc": "CA03", "col": 2}, "31474613": {"rack": "C", "loc": "CA03", "col": 4}, "31230558": {"rack": "C", "loc": "CA03", "col": 6}, "31476251": {"rack": "C", "loc": "CA03", "col": 7}, "31476256": {"rack": "C", "loc": "CA03", "col": 8}, "31208554": {"rack": "C", "loc": "CA03", "col": 9}, "31468599": {"rack": "C", "loc": "CA03", "col": 8}, "31468870": {"rack": "C", "loc": "CA03", "col": 10}, "31470480": {"rack": "C", "loc": "CA03", "col": 2}, "31466633": {"rack": "C", "loc": "CA03", "col": 3}, "31466747": {"rack": "C", "loc": "CA03", "col": 4}, "31461820": {"rack": "C", "loc": "CA03", "col": 5}, "31472058": {"rack": "C", "loc": "CA03", "col": 6}, "31472061": {"rack": "C", "loc": "CA03", "col": 7}, "31467292": {"rack": "C", "loc": "CA03", "col": 8}, "31476255": {"rack": "C", "loc": "CA03", "col": 9}, "31470911": {"rack": "C", "loc": "CA03", "col": 10}, "31466411": {"rack": "C", "loc": "CA03", "col": 11}, "31470965": {"rack": "K", "loc": "KA01", "col": 2}, "31474610": {"rack": "K", "loc": "KA01", "col": 3}, "31476254": {"rack": "K", "loc": "KA01", "col": 4}, "31463059": {"rack": "K", "loc": "KA01", "col": 5}, "31472057": {"rack": "K", "loc": "KA01", "col": 6}, "31472060": {"rack": "K", "loc": "KA01", "col": 7}, "31468517": {"rack": "K", "loc": "KA01", "col": 8}, "31470466": {"rack": "K", "loc": "KA01", "col": 9}, "31470910": {"rack": "K", "loc": "KA01", "col": 10}, "31470465": {"rack": "K", "loc": "KA01", "col": 11}, "31470942": {"rack": "K", "loc": "KA01", "col": 2}, "31471697": {"rack": "K", "loc": "KA01", "col": 3}, "31476253": {"rack": "K", "loc": "KA01", "col": 4}, "31463058": {"rack": "K", "loc": "KA01", "col": 5}, "31472056": {"rack": "K", "loc": "KA01", "col": 6}, "31472059": {"rack": "K", "loc": "KA01", "col": 7}, "31464906": {"rack": "K", "loc": "KA01", "col": 8}, "31468607": {"rack": "K", "loc": "KA01", "col": 9}, "31476258": {"rack": "K", "loc": "KA01", "col": 10}, "31477381": {"rack": "K", "loc": "KA01", "col": 11}, "31273949": {"rack": "K", "loc": "KA01", "col": 2}, "31423352": {"rack": "K", "loc": "KA01", "col": 3}, "31461679": {"rack": "K", "loc": "KA01", "col": 4}, "41152857": {"rack": "K", "loc": "KA01", "col": 5}, "41027392": {"rack": "K", "loc": "KA01", "col": 6}, "31567815": {"rack": "K", "loc": "KA01", "col": 7}, "31454969": {"rack": "K", "loc": "KA01", "col": 2}, "31423351": {"rack": "K", "loc": "KA01", "col": 3}, "31423350": {"rack": "K", "loc": "KA01", "col": 4}, "41152860": {"rack": "K", "loc": "KA01", "col": 5}, "41076392": {"rack": "K", "loc": "KA01", "col": 6}, "31183758": {"rack": "K", "loc": "KA01", "col": 7}, "31340806": {"rack": "K", "loc": "KA01", "col": 2}, "31340807": {"rack": "K", "loc": "KA01", "col": 2}, "31340808": {"rack": "K", "loc": "KA01", "col": 3}, "31301452": {"rack": "K", "loc": "KA01", "col": 2}, "31222098": {"rack": "K", "loc": "KA01", "col": 3}, "31311947": {"rack": "K", "loc": "KA01", "col": 4}, "31317060": {"rack": "K", "loc": "KA01", "col": 2}, "31348848": {"rack": "K", "loc": "KA01", "col": 3}, "31317043": {"rack": "K", "loc": "KA01", "col": 4}, "31317040": {"rack": "K", "loc": "KA01", "col": 2}, "31311946": {"rack": "K", "loc": "KA01", "col": 3}, "31311949": {"rack": "K", "loc": "KA01", "col": 4}, "31317038": {"rack": "K", "loc": "KA01", "col": 2}, "31317044": {"rack": "K", "loc": "KA01", "col": 3}, "31466742": {"rack": "K", "loc": "KA01", "col": 4}, "31466656": {"rack": "K", "loc": "KA01", "col": 2}, "31474617": {"rack": "K", "loc": "KA01", "col": 3}, "31466733": {"rack": "K", "loc": "KA01", "col": 4}, "31560308": {"rack": "K", "loc": "KA01", "col": 6}, "31568712": {"rack": "K", "loc": "KA01", "col": 10}, "31466413": {"rack": "K", "loc": "KA01", "col": 13}, "31471667": {"rack": "K", "loc": "KA01", "col": 2}, "31474392": {"rack": "K", "loc": "KA01", "col": 3}, "31476781": {"rack": "K", "loc": "KA01", "col": 4}, "31467134": {"rack": "K", "loc": "KA01", "col": 5}, "31563376": {"rack": "K", "loc": "KA01", "col": 6}, "31568715": {"rack": "K", "loc": "KA01", "col": 9}, "31568708": {"rack": "K", "loc": "KA01", "col": 10}, "31466408": {"rack": "K", "loc": "KA01", "col": 13}, "31466655": {"rack": "L", "loc": "LB01", "col": 2}, "31474391": {"rack": "L", "loc": "LB01", "col": 3}, "31495866": {"rack": "L", "loc": "LB01", "col": 4}, "31518304": {"rack": "L", "loc": "LB01", "col": 5}, "31563375": {"rack": "L", "loc": "LB01", "col": 6}, "31568707": {"rack": "L", "loc": "LB01", "col": 9}, "31568716": {"rack": "L", "loc": "LB01", "col": 10}, "31519898": {"rack": "L", "loc": "LB01", "col": 13}, "31466526": {"rack": "L", "loc": "LB01", "col": 2}, "31474390": {"rack": "L", "loc": "LB01", "col": 3}, "31495797": {"rack": "L", "loc": "LB01", "col": 4}, "31518303": {"rack": "L", "loc": "LB01", "col": 5}, "31563379": {"rack": "L", "loc": "LB01", "col": 6}, "31568710": {"rack": "L", "loc": "LB01", "col": 9}, "31568717": {"rack": "L", "loc": "LB01", "col": 10}, "31554712": {"rack": "L", "loc": "LB01", "col": 13}, "31568718": {"rack": "L", "loc": "LB01", "col": 1}, "31462752": {"rack": "L", "loc": "LB01", "col": 4}, "31461857": {"rack": "L", "loc": "LB01", "col": 2}, "31461329": {"rack": "L", "loc": "LB01", "col": 3}, "31462748": {"rack": "L", "loc": "LB01", "col": 4}, "31454462": {"rack": "L", "loc": "LB01", "col": 5}, "31454464": {"rack": "L", "loc": "LB01", "col": 6}, "31460038": {"rack": "H", "loc": "HA01", "col": 2}, "31461309": {"rack": "H", "loc": "HA01", "col": 3}, "31462721": {"rack": "H", "loc": "HA01", "col": 4}, "31454873": {"rack": "H", "loc": "HA01", "col": 5}, "31463031": {"rack": "H", "loc": "HA01", "col": 6}, "31459086": {"rack": "H", "loc": "HA01", "col": 7}, "31460891": {"rack": "H", "loc": "HA01", "col": 9}, "31460890": {"rack": "H", "loc": "HA01", "col": 11}, "31229463": {"rack": "H", "loc": "HA01", "col": 2}, "31339657": {"rack": "H", "loc": "HA01", "col": 3}, "31461192": {"rack": "H", "loc": "HA01", "col": 2}, "31461308": {"rack": "H", "loc": "HA01", "col": 3}, "31461444": {"rack": "H", "loc": "HA01", "col": 4}, "31462753": {"rack": "H", "loc": "HA01", "col": 5}, "31461595": {"rack": "H", "loc": "HA01", "col": 6}, "31459085": {"rack": "H", "loc": "HA01", "col": 7}, "31460711": {"rack": "H", "loc": "HA01", "col": 9}, "31460712": {"rack": "H", "loc": "HA01", "col": 11}, "31339659": {"rack": "H", "loc": "HA01", "col": 3}, "41078954": {"rack": "H", "loc": "HA01", "col": 4}, "31339662": {"rack": "H", "loc": "HA01", "col": 5}, "31460898": {"rack": "H", "loc": "HA01", "col": 7}, "31460714": {"rack": "H", "loc": "HA01", "col": 11}, "31460897": {"rack": "H", "loc": "HA01", "col": 7}, "31460894": {"rack": "H", "loc": "HA01", "col": 9}, "31460703": {"rack": "H", "loc": "HA01", "col": 11}, "31460896": {"rack": "H", "loc": "HA02", "col": 7}, "31460893": {"rack": "H", "loc": "HA02", "col": 9}, "31460702": {"rack": "H", "loc": "HA02", "col": 11}, "31461596": {"rack": "H", "loc": "HA02", "col": 2}, "31425500": {"rack": "H", "loc": "HA02", "col": 4}, "31460888": {"rack": "H", "loc": "HA02", "col": 5}, "31460895": {"rack": "H", "loc": "HA02", "col": 7}, "31460705": {"rack": "H", "loc": "HA02", "col": 9}, "31460695": {"rack": "H", "loc": "HA02", "col": 11}, "31460710": {"rack": "H", "loc": "HA03", "col": 2}, "31460713": {"rack": "H", "loc": "HA03", "col": 3}, "31460709": {"rack": "H", "loc": "HA03", "col": 4}, "31460887": {"rack": "H", "loc": "HA03", "col": 5}, "31460886": {"rack": "H", "loc": "HA03", "col": 6}, "31423319": {"rack": "H", "loc": "HA03", "col": 8}, "31449011": {"rack": "H", "loc": "HA03", "col": 10}, "41137751": {"rack": "H", "loc": "HA03", "col": 1}, "41104720": {"rack": "H", "loc": "HA03", "col": 2}, "41138929": {"rack": "H", "loc": "HA03", "col": 4}, "41156262": {"rack": "H", "loc": "HA03", "col": 6}, "41134597": {"rack": "H", "loc": "HA03", "col": 8}, "41129596": {"rack": "H", "loc": "HA03", "col": 12}, "31456804": {"rack": "K", "loc": "KA03", "col": 2}, "31467099": {"rack": "K", "loc": "KA03", "col": 2}, "31280192": {"rack": "K", "loc": "KA03", "col": 12}, "31466245": {"rack": "K", "loc": "KA03", "col": 2}, "31470825": {"rack": "K", "loc": "KA03", "col": 4}, "31466737": {"rack": "K", "loc": "KA03", "col": 6}, "31460909": {"rack": "K", "loc": "KA03", "col": 8}, "31466617": {"rack": "K", "loc": "KA03", "col": 2}, "31466666": {"rack": "K", "loc": "KA03", "col": 3}, "31468518": {"rack": "K", "loc": "KA03", "col": 5}, "31467088": {"rack": "K", "loc": "KA03", "col": 6}, "31468633": {"rack": "K", "loc": "KA03", "col": 7}, "31470481": {"rack": "K", "loc": "KA03", "col": 8}, "31470884": {"rack": "K", "loc": "KA03", "col": 9}, "31470941": {"rack": "K", "loc": "KA03", "col": 11}, "31470784": {"rack": "K", "loc": "KA03", "col": 12}, "31464936": {"rack": "K", "loc": "KA03", "col": 13}, "31464904": {"rack": "K", "loc": "KA03", "col": 2}, "31466654": {"rack": "K", "loc": "KA03", "col": 3}, "31467567": {"rack": "K", "loc": "KA03", "col": 4}, "31467113": {"rack": "K", "loc": "KA03", "col": 5}, "31468561": {"rack": "K", "loc": "KA03", "col": 6}, "31468602": {"rack": "K", "loc": "KA03", "col": 7}, "31470299": {"rack": "K", "loc": "KA03", "col": 8}, "31470664": {"rack": "K", "loc": "KA03", "col": 9}, "31470888": {"rack": "K", "loc": "KA03", "col": 11}, "31470783": {"rack": "K", "loc": "KA03", "col": 12}, "31465276": {"rack": "K", "loc": "KA03", "col": 13}, "31450188": {"rack": "J", "loc": "JB01", "col": 3}, "31188583": {"rack": "J", "loc": "JB01", "col": 7}, "41081189": {"rack": "J", "loc": "JB01", "col": 9}, "31456831": {"rack": "J", "loc": "JB01", "col": 2}, "31466641": {"rack": "J", "loc": "JB01", "col": 3}, "31466724": {"rack": "J", "loc": "JB01", "col": 4}, "31466994": {"rack": "J", "loc": "JB01", "col": 5}, "31468557": {"rack": "J", "loc": "JB01", "col": 6}, "31468586": {"rack": "J", "loc": "JB01", "col": 7}, "31468893": {"rack": "J", "loc": "JB01", "col": 8}, "31470630": {"rack": "J", "loc": "JB01", "col": 9}, "31470887": {"rack": "J", "loc": "JB01", "col": 11}, "31470782": {"rack": "J", "loc": "JB01", "col": 12}, "31466664": {"rack": "J", "loc": "JB01", "col": 13}, "31448954": {"rack": "J", "loc": "JB01", "col": 7}, "31423882": {"rack": "J", "loc": "JB01", "col": 11}, "31466636": {"rack": "J", "loc": "JB01", "col": 3}, "31459913": {"rack": "J", "loc": "JB01", "col": 4}, "31466745": {"rack": "J", "loc": "JB01", "col": 5}, "31468522": {"rack": "J", "loc": "JB01", "col": 6}, "31468575": {"rack": "J", "loc": "JB01", "col": 7}, "31468889": {"rack": "J", "loc": "JB01", "col": 8}, "31470482": {"rack": "J", "loc": "JB01", "col": 9}, "31470885": {"rack": "J", "loc": "JB01", "col": 10}, "31467239": {"rack": "J", "loc": "JB01", "col": 11}, "31470781": {"rack": "J", "loc": "JB01", "col": 12}, "31466646": {"rack": "J", "loc": "JB01", "col": 13}, "31449014": {"rack": "J", "loc": "JB01", "col": 7}, "31465105": {"rack": "J", "loc": "JB01", "col": 12}, "31460706": {"rack": "J", "loc": "JB02", "col": 6}, "31466657": {"rack": "J", "loc": "JB02", "col": 3}, "31454463": {"rack": "J", "loc": "JB02", "col": 4}, "31456350": {"rack": "J", "loc": "JB02", "col": 5}, "31463737": {"rack": "J", "loc": "JB02", "col": 8}, "31456418": {"rack": "J", "loc": "JB02", "col": 12}, "31467657": {"rack": "J", "loc": "JB03", "col": 2}, "31467076": {"rack": "J", "loc": "JB03", "col": 4}, "31454561": {"rack": "J", "loc": "JB03", "col": 6}, "31454562": {"rack": "J", "loc": "JB03", "col": 8}, "31454563": {"rack": "J", "loc": "JB03", "col": 10}, "31262209": {"rack": "J", "loc": "JB03", "col": 12}, "31246307": {"rack": "J", "loc": "JB03", "col": 3}, "31249402": {"rack": "J", "loc": "JB03", "col": 3}, "31318460": {"rack": "J", "loc": "JB03", "col": 9}, "31240034": {"rack": "J", "loc": "JB03", "col": 10}, "31213243": {"rack": "B", "loc": "BB01", "col": 3}, "31227427": {"rack": "B", "loc": "BB01", "col": 5}, "31225555": {"rack": "B", "loc": "BB01", "col": 7}, "31222659": {"rack": "B", "loc": "BB01", "col": 8}, "31213042": {"rack": "B", "loc": "BB01", "col": 9}, "31234915": {"rack": "B", "loc": "BB01", "col": 10}, "31223889": {"rack": "B", "loc": "BB01", "col": 2}, "31229769": {"rack": "B", "loc": "BB01", "col": 3}, "31216859": {"rack": "B", "loc": "BB01", "col": 4}, "31259508": {"rack": "B", "loc": "BB01", "col": 9}, "31217917": {"rack": "B", "loc": "BB01", "col": 10}, "31241437": {"rack": "B", "loc": "BB01", "col": 2}, "31243461": {"rack": "B", "loc": "BB01", "col": 3}, "31243823": {"rack": "B", "loc": "BB01", "col": 4}, "31242454": {"rack": "B", "loc": "BB01", "col": 5}, "31218870": {"rack": "B", "loc": "BB01", "col": 11}, "31241436": {"rack": "B", "loc": "BB01", "col": 2}, "31243803": {"rack": "B", "loc": "BB01", "col": 3}, "31244884": {"rack": "B", "loc": "BB01", "col": 4}, "31243785": {"rack": "B", "loc": "BB01", "col": 5}, "31250165": {"rack": "B", "loc": "BB01", "col": 6}, "31244085": {"rack": "B", "loc": "BB01", "col": 7}, "31250169": {"rack": "B", "loc": "BB01", "col": 8}, "31249383": {"rack": "B", "loc": "BB01", "col": 9}, "31239283": {"rack": "B", "loc": "BB01", "col": 10}, "31243796": {"rack": "B", "loc": "BB01", "col": 11}, "31243783": {"rack": "B", "loc": "BB02", "col": 2}, "31243787": {"rack": "B", "loc": "BB02", "col": 3}, "31243854": {"rack": "B", "loc": "BB02", "col": 4}, "31243817": {"rack": "B", "loc": "BB02", "col": 5}, "31242192": {"rack": "B", "loc": "BB02", "col": 6}, "31247874": {"rack": "B", "loc": "BB02", "col": 7}, "31245437": {"rack": "B", "loc": "BB02", "col": 8}, "31242986": {"rack": "B", "loc": "BB02", "col": 9}, "31251351": {"rack": "B", "loc": "BB02", "col": 10}, "31240320": {"rack": "B", "loc": "BB02", "col": 11}, "31243710": {"rack": "B", "loc": "BB02", "col": 2}, "31243793": {"rack": "B", "loc": "BB02", "col": 3}, "31243829": {"rack": "B", "loc": "BB02", "col": 4}, "31245426": {"rack": "B", "loc": "BB02", "col": 5}, "31224713": {"rack": "B", "loc": "BB02", "col": 6}, "31244888": {"rack": "B", "loc": "BB02", "col": 7}, "31248576": {"rack": "B", "loc": "BB02", "col": 8}, "31249631": {"rack": "B", "loc": "BB02", "col": 9}, "31251350": {"rack": "B", "loc": "BB02", "col": 10}, "31241534": {"rack": "B", "loc": "BB02", "col": 11}, "31249386": {"rack": "B", "loc": "BB02", "col": 12}, "31273123": {"rack": "B", "loc": "BB02", "col": 2}, "31245908": {"rack": "B", "loc": "BB02", "col": 4}, "31291442": {"rack": "B", "loc": "BB02", "col": 6}, "31267888": {"rack": "B", "loc": "BB02", "col": 8}, "31268332": {"rack": "B", "loc": "BB02", "col": 4}, "31271550": {"rack": "B", "loc": "BB02", "col": 5}, "31285847": {"rack": "B", "loc": "BB02", "col": 6}, "31276942": {"rack": "B", "loc": "BB02", "col": 7}, "31258881": {"rack": "C", "loc": "CA01", "col": 2}, "31261299": {"rack": "C", "loc": "CA01", "col": 3}, "31267180": {"rack": "C", "loc": "CA01", "col": 4}, "31270160": {"rack": "C", "loc": "CA01", "col": 5}, "31280457": {"rack": "C", "loc": "CA01", "col": 6}, "31276067": {"rack": "C", "loc": "CA01", "col": 7}, "31288875": {"rack": "C", "loc": "CA01", "col": 8}, "31291513": {"rack": "C", "loc": "CA01", "col": 9}, "31291529": {"rack": "C", "loc": "CA01", "col": 10}, "31253190": {"rack": "C", "loc": "CA01", "col": 2}, "31258469": {"rack": "C", "loc": "CA01", "col": 3}, "31252864": {"rack": "C", "loc": "CA01", "col": 4}, "31270051": {"rack": "C", "loc": "CA01", "col": 5}, "31278828": {"rack": "C", "loc": "CA01", "col": 6}, "31274315": {"rack": "C", "loc": "CA01", "col": 7}, "31282860": {"rack": "C", "loc": "CA01", "col": 8}, "31293111": {"rack": "C", "loc": "CA01", "col": 9}, "31291528": {"rack": "C", "loc": "CA01", "col": 10}, "33012594": {"rack": "C", "loc": "CA01", "col": 9}, "31288050": {"rack": "C", "loc": "CA01", "col": 4}, "31292864": {"rack": "C", "loc": "CA01", "col": 5}, "31302326": {"rack": "C", "loc": "CA01", "col": 6}, "31299229": {"rack": "C", "loc": "CA01", "col": 7}, "31292865": {"rack": "C", "loc": "CA01", "col": 8}, "31295648": {"rack": "C", "loc": "CA01", "col": 9}, "31288874": {"rack": "C", "loc": "CA01", "col": 4}, "31296255": {"rack": "C", "loc": "CA01", "col": 5}, "31297864": {"rack": "C", "loc": "CA01", "col": 6}, "31299226": {"rack": "C", "loc": "CA01", "col": 7}, "31299230": {"rack": "C", "loc": "CA01", "col": 8}, "31299775": {"rack": "C", "loc": "CA01", "col": 9}, "31303459": {"rack": "C", "loc": "CA01", "col": 10}, "31293520": {"rack": "C", "loc": "CA01", "col": 11}, "31297475": {"rack": "C", "loc": "CA02", "col": 2}, "31289566": {"rack": "C", "loc": "CA02", "col": 4}, "31293112": {"rack": "C", "loc": "CA02", "col": 5}, "31297497": {"rack": "C", "loc": "CA02", "col": 6}, "31299225": {"rack": "C", "loc": "CA02", "col": 7}, "31299227": {"rack": "C", "loc": "CA02", "col": 8}, "31299235": {"rack": "C", "loc": "CA02", "col": 9}, "31305447": {"rack": "C", "loc": "CA02", "col": 10}, "31271850": {"rack": "C", "loc": "CA02", "col": 11}, "44006480": {"rack": "C", "loc": "CA02", "col": 5}, "31257993": {"rack": "C", "loc": "CA02", "col": 2}, "31289565": {"rack": "C", "loc": "CA02", "col": 4}, "31291514": {"rack": "C", "loc": "CA02", "col": 5}, "31297498": {"rack": "C", "loc": "CA02", "col": 6}, "31299224": {"rack": "C", "loc": "CA02", "col": 7}, "31299228": {"rack": "C", "loc": "CA02", "col": 8}, "31299232": {"rack": "C", "loc": "CA02", "col": 9}, "31306084": {"rack": "C", "loc": "CA02", "col": 10}, "31271849": {"rack": "C", "loc": "CA02", "col": 11}, "31304164": {"rack": "C", "loc": "CA02", "col": 12}, "31293595": {"rack": "C", "loc": "CA02", "col": 2}, "31295510": {"rack": "C", "loc": "CA02", "col": 3}, "31279691": {"rack": "C", "loc": "CA02", "col": 4}, "31280962": {"rack": "C", "loc": "CA02", "col": 5}, "31276225": {"rack": "C", "loc": "CA02", "col": 6}, "31274176": {"rack": "C", "loc": "CA02", "col": 8}, "31292401": {"rack": "C", "loc": "CA02", "col": 9}, "31265983": {"rack": "C", "loc": "CA02", "col": 10}, "31262184": {"rack": "C", "loc": "CA02", "col": 11}, "31260088": {"rack": "C", "loc": "CA02", "col": 12}, "31282659": {"rack": "C", "loc": "CA02", "col": 2}, "31287087": {"rack": "C", "loc": "CA02", "col": 3}, "31277029": {"rack": "C", "loc": "CA02", "col": 4}, "31280366": {"rack": "C", "loc": "CA02", "col": 5}, "31278791": {"rack": "C", "loc": "CA02", "col": 6}, "31276779": {"rack": "C", "loc": "CA02", "col": 7}, "31273805": {"rack": "C", "loc": "CA02", "col": 8}, "31289564": {"rack": "C", "loc": "CA02", "col": 9}, "31265060": {"rack": "C", "loc": "CA02", "col": 10}, "31261655": {"rack": "C", "loc": "CA02", "col": 11}, "31250350": {"rack": "C", "loc": "CA02", "col": 12}, "31252877": {"rack": "C", "loc": "CA02", "col": 13}, "31280436": {"rack": "C", "loc": "CB01", "col": 2}, "31291898": {"rack": "C", "loc": "CB01", "col": 3}, "31285183": {"rack": "C", "loc": "CB01", "col": 4}, "31280198": {"rack": "C", "loc": "CB01", "col": 5}, "31277028": {"rack": "C", "loc": "CB01", "col": 6}, "31276586": {"rack": "C", "loc": "CB01", "col": 7}, "31273126": {"rack": "C", "loc": "CB01", "col": 8}, "31268326": {"rack": "C", "loc": "CB01", "col": 9}, "31263680": {"rack": "C", "loc": "CB01", "col": 10}, "31261304": {"rack": "C", "loc": "CB01", "col": 11}, "31259537": {"rack": "C", "loc": "CB01", "col": 12}, "31252876": {"rack": "C", "loc": "CB01", "col": 13}, "31280435": {"rack": "C", "loc": "CB01", "col": 2}, "31280199": {"rack": "C", "loc": "CB01", "col": 3}, "31282862": {"rack": "C", "loc": "CB01", "col": 4}, "31279687": {"rack": "C", "loc": "CB01", "col": 5}, "31276332": {"rack": "C", "loc": "CB01", "col": 6}, "31275856": {"rack": "C", "loc": "CB01", "col": 7}, "31271272": {"rack": "C", "loc": "CB01", "col": 8}, "31267889": {"rack": "C", "loc": "CB01", "col": 9}, "31263668": {"rack": "C", "loc": "CB01", "col": 10}, "31260090": {"rack": "C", "loc": "CB01", "col": 11}, "31253386": {"rack": "C", "loc": "CB01", "col": 12}, "31252875": {"rack": "C", "loc": "CB01", "col": 13}, "31300964": {"rack": "C", "loc": "CB01", "col": 4}, "31300597": {"rack": "C", "loc": "CB01", "col": 9}, "31300963": {"rack": "C", "loc": "CB01", "col": 4}, "31306085": {"rack": "C", "loc": "CB01", "col": 5}, "31301560": {"rack": "C", "loc": "CB01", "col": 6}, "31291525": {"rack": "C", "loc": "CB01", "col": 9}, "31303460": {"rack": "C", "loc": "CB02", "col": 3}, "31300962": {"rack": "C", "loc": "CB02", "col": 4}, "31306111": {"rack": "C", "loc": "CB02", "col": 5}, "31307097": {"rack": "C", "loc": "CB02", "col": 6}, "31262413": {"rack": "C", "loc": "CB02", "col": 9}, "31302920": {"rack": "C", "loc": "CB02", "col": 2}, "31300969": {"rack": "C", "loc": "CB02", "col": 3}, "31300961": {"rack": "C", "loc": "CB02", "col": 4}, "31305915": {"rack": "C", "loc": "CB02", "col": 5}, "31305487": {"rack": "C", "loc": "CB02", "col": 6}, "31299233": {"rack": "C", "loc": "CB02", "col": 7}, "31280193": {"rack": "C", "loc": "CB02", "col": 8}, "31266174": {"rack": "C", "loc": "CB02", "col": 9}, "31277903": {"rack": "C", "loc": "CB02", "col": 10}, "31276777": {"rack": "C", "loc": "CB02", "col": 11}, "31276776": {"rack": "C", "loc": "CB02", "col": 12}, "31269853": {"rack": "C", "loc": "CB02", "col": 13}, "31259935": {"rack": "C", "loc": "CB02", "col": 2}, "31259936": {"rack": "C", "loc": "CB02", "col": 4}, "31262014": {"rack": "C", "loc": "CB02", "col": 6}, "31274611": {"rack": "C", "loc": "CB02", "col": 8}, "31274612": {"rack": "C", "loc": "CB02", "col": 10}, "31464905": {"rack": "C", "loc": "CB02", "col": 3}, "31466661": {"rack": "C", "loc": "CB02", "col": 5}, "31474603": {"rack": "C", "loc": "CB02", "col": 2}, "31352088": {"rack": "C", "loc": "CB02", "col": 4}, "31467159": {"rack": "C", "loc": "CB02", "col": 6}, "31424058": {"rack": "C", "loc": "CB02", "col": 4}, "31424019": {"rack": "C", "loc": "CB02", "col": 5}, "31424014": {"rack": "C", "loc": "CB02", "col": 6}, "31424010": {"rack": "C", "loc": "CB02", "col": 7}, "31423226": {"rack": "C", "loc": "CB02", "col": 11}, "31424240": {"rack": "C", "loc": "CB02", "col": 3}, "31424057": {"rack": "C", "loc": "CB02", "col": 4}, "31424017": {"rack": "C", "loc": "CB02", "col": 5}, "31424013": {"rack": "C", "loc": "CB02", "col": 6}, "31424009": {"rack": "C", "loc": "CB02", "col": 7}, "31426250": {"rack": "C", "loc": "CB02", "col": 9}, "31425781": {"rack": "C", "loc": "CB02", "col": 10}, "31422699": {"rack": "C", "loc": "CB02", "col": 11}, "31422549": {"rack": "C", "loc": "CB02", "col": 12}, "41104670": {"rack": "F", "loc": "FB01", "col": 10}, "31425492": {"rack": "F", "loc": "FB01", "col": 2}, "31424239": {"rack": "F", "loc": "FB01", "col": 3}, "31424024": {"rack": "F", "loc": "FB01", "col": 4}, "31424016": {"rack": "F", "loc": "FB01", "col": 5}, "31424012": {"rack": "F", "loc": "FB01", "col": 6}, "31419150": {"rack": "F", "loc": "FB01", "col": 8}, "31423354": {"rack": "F", "loc": "FB01", "col": 9}, "31423322": {"rack": "F", "loc": "FB01", "col": 10}, "31419404": {"rack": "F", "loc": "FB01", "col": 11}, "31422548": {"rack": "F", "loc": "FB01", "col": 12}, "31419381": {"rack": "F", "loc": "FB01", "col": 2}, "31424059": {"rack": "F", "loc": "FB01", "col": 3}, "31424020": {"rack": "F", "loc": "FB01", "col": 4}, "31424015": {"rack": "F", "loc": "FB01", "col": 5}, "31424011": {"rack": "F", "loc": "FB01", "col": 6}, "31423359": {"rack": "F", "loc": "FB01", "col": 7}, "31423472": {"rack": "F", "loc": "FB01", "col": 8}, "31423353": {"rack": "F", "loc": "FB01", "col": 9}, "31423323": {"rack": "F", "loc": "FB01", "col": 10}, "31419403": {"rack": "F", "loc": "FB01", "col": 11}, "31419107": {"rack": "F", "loc": "FB01", "col": 12}, "31258882": {"rack": "F", "loc": "FB01", "col": 8}, "31436987": {"rack": "F", "loc": "FB01", "col": 6}, "31458844": {"rack": "F", "loc": "FB01", "col": 10}, "31466499": {"rack": "J", "loc": "JA03", "col": 4}, "31330879": {"rack": "J", "loc": "JA03", "col": 6}, "31463034": {"rack": "J", "loc": "JA03", "col": 7}, "31437392": {"rack": "J", "loc": "JA03", "col": 8}, "31349607": {"rack": "J", "loc": "JA03", "col": 10}, "31467375": {"rack": "J", "loc": "JA03", "col": 2}, "31466648": {"rack": "J", "loc": "JA03", "col": 4}, "31466405": {"rack": "J", "loc": "JA03", "col": 5}, "31463033": {"rack": "J", "loc": "JA03", "col": 6}, "31463032": {"rack": "J", "loc": "JA03", "col": 7}, "31353570": {"rack": "J", "loc": "JA03", "col": 2}, "31352170": {"rack": "J", "loc": "JA03", "col": 3}, "31351696": {"rack": "J", "loc": "JA03", "col": 5}, "31350991": {"rack": "J", "loc": "JA03", "col": 8}, "31353569": {"rack": "J", "loc": "JA03", "col": 2}, "31352169": {"rack": "J", "loc": "JA03", "col": 3}, "31352172": {"rack": "J", "loc": "JA03", "col": 4}, "31352091": {"rack": "J", "loc": "JA03", "col": 5}, "31352080": {"rack": "J", "loc": "JA03", "col": 6}, "31351656": {"rack": "J", "loc": "JA03", "col": 7}, "31350981": {"rack": "J", "loc": "JA03", "col": 8}, "31349034": {"rack": "J", "loc": "JA03", "col": 9}, "31349500": {"rack": "J", "loc": "JA03", "col": 11}, "31349493": {"rack": "J", "loc": "JA03", "col": 12}, "31352947": {"rack": "E", "loc": "EB01", "col": 2}, "31352168": {"rack": "E", "loc": "EB01", "col": 3}, "31352093": {"rack": "E", "loc": "EB01", "col": 4}, "31352084": {"rack": "E", "loc": "EB01", "col": 5}, "31351923": {"rack": "E", "loc": "EB01", "col": 6}, "31351655": {"rack": "E", "loc": "EB01", "col": 7}, "31350725": {"rack": "E", "loc": "EB01", "col": 8}, "31349436": {"rack": "E", "loc": "EB01", "col": 9}, "31349609": {"rack": "E", "loc": "EB01", "col": 11}, "31349492": {"rack": "E", "loc": "EB01", "col": 12}, "31352336": {"rack": "E", "loc": "EB01", "col": 2}, "31352167": {"rack": "E", "loc": "EB01", "col": 3}, "31352083": {"rack": "E", "loc": "EB01", "col": 4}, "31352077": {"rack": "E", "loc": "EB01", "col": 5}, "31351658": {"rack": "E", "loc": "EB01", "col": 6}, "31350729": {"rack": "E", "loc": "EB01", "col": 7}, "31350306": {"rack": "E", "loc": "EB01", "col": 8}, "31350082": {"rack": "E", "loc": "EB01", "col": 9}, "31352630": {"rack": "E", "loc": "EB01", "col": 10}, "31349610": {"rack": "E", "loc": "EB01", "col": 11}, "31349491": {"rack": "E", "loc": "EB01", "col": 12}, "31359336": {"rack": "E", "loc": "EB01", "col": 13}, "31348855": {"rack": "E", "loc": "EB02", "col": 8}, "31358149": {"rack": "E", "loc": "EB02", "col": 9}, "31349499": {"rack": "E", "loc": "EB02", "col": 10}, "31354432": {"rack": "E", "loc": "EB02", "col": 12}, "31351692": {"rack": "E", "loc": "EB02", "col": 13}, "31360326": {"rack": "E", "loc": "EB02", "col": 7}, "31351693": {"rack": "E", "loc": "EB03", "col": 3}, "31349037": {"rack": "E", "loc": "EB03", "col": 4}, "31349036": {"rack": "E", "loc": "EB03", "col": 5}, "31360327": {"rack": "E", "loc": "EB03", "col": 7}, "31357902": {"rack": "E", "loc": "EB03", "col": 8}, "31337562": {"rack": "E", "loc": "EB03", "col": 9}, "41069615": {"rack": "E", "loc": "EB03", "col": 3}, "41078953": {"rack": "E", "loc": "EB03", "col": 6}, "41079058": {"rack": "E", "loc": "EB03", "col": 7}, "41156705": {"rack": "E", "loc": "EB03", "col": 8}, "41080891": {"rack": "E", "loc": "EB03", "col": 10}, "41080892": {"rack": "E", "loc": "EB03", "col": 11}, "41080672": {"rack": "E", "loc": "EB03", "col": 12}, "41067574": {"rack": "E", "loc": "EB03", "col": 2}, "41069614": {"rack": "E", "loc": "EB03", "col": 3}, "41080888": {"rack": "E", "loc": "EB03", "col": 4}, "41077867": {"rack": "E", "loc": "EB03", "col": 5}, "41078952": {"rack": "E", "loc": "EB03", "col": 6}, "41079057": {"rack": "E", "loc": "EB03", "col": 7}, "41079714": {"rack": "E", "loc": "EB03", "col": 8}, "41080673": {"rack": "E", "loc": "EB03", "col": 9}, "41080890": {"rack": "E", "loc": "EB03", "col": 10}, "41068798": {"rack": "E", "loc": "EB03", "col": 12}, "41064261": {"rack": "I", "loc": "IA01", "col": 2}, "41069613": {"rack": "I", "loc": "IA01", "col": 3}, "41080893": {"rack": "I", "loc": "IA01", "col": 4}, "41076304": {"rack": "I", "loc": "IA01", "col": 5}, "41078948": {"rack": "I", "loc": "IA01", "col": 6}, "41078955": {"rack": "I", "loc": "IA01", "col": 7}, "41079712": {"rack": "I", "loc": "IA01", "col": 8}, "41080670": {"rack": "I", "loc": "IA01", "col": 9}, "41080675": {"rack": "I", "loc": "IA01", "col": 10}, "41081187": {"rack": "I", "loc": "IA01", "col": 11}, "41074685": {"rack": "I", "loc": "IA01", "col": 12}, "41064258": {"rack": "I", "loc": "IA01", "col": 2}, "41069612": {"rack": "I", "loc": "IA01", "col": 3}, "41074169": {"rack": "I", "loc": "IA01", "col": 4}, "41076006": {"rack": "I", "loc": "IA01", "col": 5}, "41077869": {"rack": "I", "loc": "IA01", "col": 6}, "41079697": {"rack": "I", "loc": "IA01", "col": 8}, "41080669": {"rack": "I", "loc": "IA01", "col": 9}, "41080674": {"rack": "I", "loc": "IA01", "col": 10}, "41081186": {"rack": "I", "loc": "IA01", "col": 11}, "41074684": {"rack": "I", "loc": "IA01", "col": 12}, "41126662": {"rack": "I", "loc": "IA01", "col": 5}, "41132713": {"rack": "I", "loc": "IA01", "col": 6}, "41126343": {"rack": "I", "loc": "IA01", "col": 5}, "41129931": {"rack": "I", "loc": "IA01", "col": 6}, "41111814": {"rack": "I", "loc": "IA01", "col": 7}, "41085172": {"rack": "I", "loc": "IA01", "col": 8}, "41136340": {"rack": "I", "loc": "IA01", "col": 9}, "41154035": {"rack": "I", "loc": "IA01", "col": 10}, "41153787": {"rack": "I", "loc": "IA01", "col": 11}, "41125492": {"rack": "I", "loc": "IA02", "col": 5}, "41127276": {"rack": "I", "loc": "IA02", "col": 6}, "41133694": {"rack": "I", "loc": "IA02", "col": 7}, "41156708": {"rack": "I", "loc": "IA02", "col": 8}, "41156707": {"rack": "I", "loc": "IA02", "col": 9}, "41156710": {"rack": "I", "loc": "IA02", "col": 10}, "41157707": {"rack": "I", "loc": "IA02", "col": 11}, "41115423": {"rack": "I", "loc": "IA02", "col": 2}, "41124152": {"rack": "I", "loc": "IA02", "col": 3}, "41124151": {"rack": "I", "loc": "IA02", "col": 4}, "41124218": {"rack": "I", "loc": "IA02", "col": 5}, "41126663": {"rack": "I", "loc": "IA02", "col": 6}, "41133051": {"rack": "I", "loc": "IA02", "col": 7}, "41082391": {"rack": "I", "loc": "IA02", "col": 8}, "41156706": {"rack": "I", "loc": "IA02", "col": 9}, "41156709": {"rack": "I", "loc": "IA02", "col": 10}, "41138205": {"rack": "I", "loc": "IA02", "col": 11}, "31280417": {"rack": "I", "loc": "IA02", "col": 13}, "31449024": {"rack": "I", "loc": "IA03", "col": 9}, "31448921": {"rack": "I", "loc": "IA03", "col": 2}, "31448949": {"rack": "I", "loc": "IA03", "col": 3}, "31448961": {"rack": "I", "loc": "IA03", "col": 5}, "31448973": {"rack": "I", "loc": "IA03", "col": 6}, "31449023": {"rack": "I", "loc": "IA03", "col": 9}, "31424920": {"rack": "I", "loc": "IA03", "col": 11}, "31425528": {"rack": "I", "loc": "IA03", "col": 12}, "31448923": {"rack": "F", "loc": "FA01", "col": 2}, "31448948": {"rack": "F", "loc": "FA01", "col": 3}, "31466202": {"rack": "F", "loc": "FA01", "col": 4}, "31448955": {"rack": "F", "loc": "FA01", "col": 5}, "31448967": {"rack": "F", "loc": "FA01", "col": 6}, "31449022": {"rack": "F", "loc": "FA01", "col": 9}, "31448970": {"rack": "F", "loc": "FA01", "col": 10}, "31424921": {"rack": "F", "loc": "FA01", "col": 11}, "31425527": {"rack": "F", "loc": "FA01", "col": 12}, "31448936": {"rack": "F", "loc": "FA01", "col": 2}, "31448946": {"rack": "F", "loc": "FA01", "col": 3}, "31448951": {"rack": "F", "loc": "FA01", "col": 4}, "31448962": {"rack": "F", "loc": "FA01", "col": 6}, "31449005": {"rack": "F", "loc": "FA01", "col": 7}, "31449009": {"rack": "F", "loc": "FA01", "col": 8}, "31449021": {"rack": "F", "loc": "FA01", "col": 9}, "31448920": {"rack": "F", "loc": "FA01", "col": 10}, "31424922": {"rack": "F", "loc": "FA01", "col": 11}, "31425526": {"rack": "F", "loc": "FA01", "col": 12}, "31449029": {"rack": "F", "loc": "FA01", "col": 4}, "31449028": {"rack": "F", "loc": "FA01", "col": 4}, "31449970": {"rack": "F", "loc": "FA01", "col": 5}, "31449027": {"rack": "F", "loc": "FA02", "col": 4}, "31449969": {"rack": "F", "loc": "FA02", "col": 5}, "31450187": {"rack": "F", "loc": "FA02", "col": 6}, "31424056": {"rack": "F", "loc": "FA02", "col": 8}, "31424026": {"rack": "F", "loc": "FA02", "col": 9}, "31424021": {"rack": "F", "loc": "FA02", "col": 11}, "31449025": {"rack": "F", "loc": "FA02", "col": 4}, "31449142": {"rack": "F", "loc": "FA02", "col": 5}, "31449405": {"rack": "F", "loc": "FA02", "col": 6}, "31449026": {"rack": "F", "loc": "FA02", "col": 7}, "31424060": {"rack": "F", "loc": "FA02", "col": 8}, "31424028": {"rack": "F", "loc": "FA02", "col": 9}, "31424023": {"rack": "F", "loc": "FA02", "col": 10}, "31424022": {"rack": "F", "loc": "FA02", "col": 11}, "31451123": {"rack": "F", "loc": "FA02", "col": 7}, "31451119": {"rack": "F", "loc": "FA02", "col": 8}, "31451122": {"rack": "F", "loc": "FA02", "col": 7}, "31451118": {"rack": "F", "loc": "FA02", "col": 8}, "31451121": {"rack": "F", "loc": "FA03", "col": 7}, "31451117": {"rack": "F", "loc": "FA03", "col": 8}, "31422630": {"rack": "F", "loc": "FA03", "col": 2}, "31448947": {"rack": "F", "loc": "FA03", "col": 4}, "31449017": {"rack": "F", "loc": "FA03", "col": 5}, "31451120": {"rack": "F", "loc": "FA03", "col": 7}, "31451116": {"rack": "F", "loc": "FA03", "col": 8}, "31451114": {"rack": "F", "loc": "FA03", "col": 9}, "31466407": {"rack": "K", "loc": "KA02", "col": 3}, "31474733": {"rack": "K", "loc": "KA02", "col": 7}, "31463736": {"rack": "K", "loc": "KA02", "col": 11}, "31457881": {"rack": "K", "loc": "KA02", "col": 2}, "31469015": {"rack": "K", "loc": "KA02", "col": 10}};
+</script>
+</head>
+<body>
+<div class="wrap">
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="hdr-main">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div class="logo-box">SPARE<br>PART</div>
+      <div>
+        <div class="hdr-co">แผนกคลังพัสดุ — Spare Part Inventory</div>
+        <div class="hdr-title">ระบบนับสต๊อกอะไหล่ประจำเดือน</div>
+        <div class="hdr-sub">นับ 3 Rack / สัปดาห์ · 4 สัปดาห์ · ครบ 100% · ตรวจสอบกับ SAP</div>
+      </div>
+    </div>
+    <div class="hdr-meta">
+      <div id="hdr-date"></div>
+      <div id="hdr-total-items">รายการทั้งหมด: <strong>—</strong></div>
+      <div id="hdr-progress-pct">ความคืบหน้า: <strong>0%</strong></div>
+    </div>
+  </div>
+  <div class="hdr-foot">
+    <span id="hdr-session">เซสชัน: มิถุนายน 2569</span>
+    <span>เป้าหมาย: นับครบ 100% · ความถูกต้อง ≥ 98% · ภายใน 30 มิ.ย. 69</span>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs no-print">
+  <button class="active" onclick="switchTab('dashboard')">ภาพรวม</button>
+  <button onclick="switchTab('import')">นำเข้าข้อมูล SAP</button>
+  <button onclick="switchTab('rack')">เลือก Rack นับ</button>
+  <button onclick="switchTab('count')">แผ่นนับ / พิมพ์</button>
+  <button onclick="switchTab('location')">โลเคชั่น</button>
+  <button onclick="switchTab('labels')">พิมพ์ป้ายอะไหล่</button>
+</div>
+
+<!-- ══════════════════════════════════════════
+     TAB 1: DASHBOARD
+══════════════════════════════════════════ -->
+<div class="tab active" id="tab-dashboard">
+  <div class="stats-row">
+    <div class="stat"><div class="stat-lbl">รายการทั้งหมด</div><div class="stat-num blue" id="st-total">0</div></div>
+    <div class="stat"><div class="stat-lbl">นับแล้ว</div><div class="stat-num green" id="st-counted">0</div></div>
+    <div class="stat"><div class="stat-lbl">ยังไม่นับ</div><div class="stat-num amber" id="st-pending">0</div></div>
+    <div class="stat"><div class="stat-lbl">Rack ทั้งหมด</div><div class="stat-num blue" id="st-racks">14</div></div>
+  </div>
+
+  <!-- Overall progress -->
+  <div class="sec">
+    <div class="sec-hd">
+      <div class="sec-hd-l"><span class="sec-tag" style="background:#1558a8">ภาพรวม</span><span class="sec-ttl">ความคืบหน้าการนับสต๊อก</span></div>
+    </div>
+    <div class="sec-bd">
+      <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px">
+        <span>ความคืบหน้า</span><span id="dash-pct-text">0 / 0 รายการ</span>
+      </div>
+      <div class="progress-bar" style="height:14px"><div class="progress-fill" id="dash-pct-bar" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <!-- Week plan -->
+  <div class="sec">
+    <div class="sec-hd">
+      <div class="sec-hd-l"><span class="sec-tag" style="background:#4c1d95">แผน 4 สัปดาห์</span><span class="sec-ttl">ผัง Rack ตามโซนนับ</span></div>
+      <button class="btn btn-sm btn-outline no-print" onclick="switchTab('rack')">เลือก Rack นับ →</button>
+    </div>
+    <div class="sec-bd">
+      <div class="week-strip">
+        <div class="wk-box wk1" onclick="selectWeekRacks(1)">
+          <div class="wk-num">สัปดาห์ 1</div>
+          <div class="wk-date">1–6 มิ.ย.</div>
+          <div class="wk-racks">Rack A · B · C</div>
+          <div style="font-size:10px;margin-top:4px;opacity:.8">+ แถว 1, 2, 3</div>
+        </div>
+        <div class="wk-box wk2" onclick="selectWeekRacks(2)">
+          <div class="wk-num">สัปดาห์ 2</div>
+          <div class="wk-date">8–13 มิ.ย.</div>
+          <div class="wk-racks">Rack D · E · F</div>
+          <div style="font-size:10px;margin-top:4px;opacity:.8">+ แถว 4, 5, 6 + โต๊ะปืน</div>
+        </div>
+        <div class="wk-box wk3" onclick="selectWeekRacks(3)">
+          <div class="wk-num">สัปดาห์ 3</div>
+          <div class="wk-date">15–20 มิ.ย.</div>
+          <div class="wk-racks">Rack G · H · I</div>
+          <div style="font-size:10px;margin-top:4px;opacity:.8">+ ตึ่ง 1,2 + แถว 7, 8, 9</div>
+        </div>
+        <div class="wk-box wk4" onclick="selectWeekRacks(4)">
+          <div class="wk-num">สัปดาห์ 4</div>
+          <div class="wk-date">22–27 มิ.ย.</div>
+          <div class="wk-racks">Rack J · K · L · M · N</div>
+          <div style="font-size:10px;margin-top:4px;opacity:.8">M,N ใต้โต๊ะซ่อม</div>
+        </div>
+      </div>
+
+      <!-- Floor plan visual -->
+      <div class="floor-plan">
+        <div class="fp-title">ผังพื้นที่คลัง — คลิก Rack เพื่อเลือกนับ</div>
+        <div class="fp-grid">
+          <div class="fp-zone">
+            <div style="font-size:10px;font-weight:600;color:var(--muted);margin-bottom:4px;text-align:center">โซนซ้าย</div>
+            <div class="fp-row" style="grid-template-columns:1fr 1fr">
+              <div class="fp-rack wk1" onclick="quickSelectRack('C')" id="fp-C">Rack C</div>
+              <div class="fp-rack wk1" onclick="quickSelectRack('D')" id="fp-D">Rack D</div>
+            </div>
+            <div class="fp-row" style="grid-template-columns:1fr 1fr">
+              <div class="fp-rack wk1" onclick="quickSelectRack('A')" id="fp-A">Rack A</div>
+              <div class="fp-rack wk2" onclick="quickSelectRack('E')" id="fp-E">Rack E</div>
+            </div>
+            <div class="fp-row" style="grid-template-columns:1fr 1fr">
+              <div class="fp-rack wk1" onclick="quickSelectRack('B')" id="fp-B">Rack B</div>
+              <div class="fp-rack wk2" onclick="quickSelectRack('F')" id="fp-F">Rack F</div>
+            </div>
+          </div>
+          <div class="fp-zone">
+            <div style="font-size:10px;font-weight:600;color:var(--muted);margin-bottom:4px;text-align:center">โซนขวา</div>
+            <div class="fp-row" style="grid-template-columns:1fr 1fr 1fr">
+              <div class="fp-rack wk3" onclick="quickSelectRack('G')" id="fp-G">Rack G</div>
+              <div class="fp-rack wk3" onclick="quickSelectRack('H')" id="fp-H">Rack H</div>
+              <div class="fp-rack wk3" onclick="quickSelectRack('I')" id="fp-I">Rack I</div>
+            </div>
+            <div class="fp-row" style="grid-template-columns:1fr 1fr 1fr">
+              <div class="fp-rack wk4" onclick="quickSelectRack('J')" id="fp-J">Rack J</div>
+              <div class="fp-rack wk4" onclick="quickSelectRack('K')" id="fp-K">Rack K</div>
+              <div class="fp-rack wk4" onclick="quickSelectRack('L')" id="fp-L">Rack L</div>
+            </div>
+            <div class="fp-row" style="grid-template-columns:1fr 1fr">
+              <div class="fp-rack wk4" onclick="quickSelectRack('M')" id="fp-M">Rack M</div>
+              <div class="fp-rack wk4" onclick="quickSelectRack('N')" id="fp-N">Rack N (ชั้นพริ้น)</div>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:10px;display:flex;gap:12px;flex-wrap:wrap;font-size:10.5px">
+          <span><span style="display:inline-block;width:10px;height:10px;background:#dbeafe;border:1px solid #93c5fd;border-radius:2px;margin-right:4px"></span>สัปดาห์ 1</span>
+          <span><span style="display:inline-block;width:10px;height:10px;background:#dcfce7;border:1px solid #86efac;border-radius:2px;margin-right:4px"></span>สัปดาห์ 2</span>
+          <span><span style="display:inline-block;width:10px;height:10px;background:#fef3c7;border:1px solid #fcd34d;border-radius:2px;margin-right:4px"></span>สัปดาห์ 3</span>
+          <span><span style="display:inline-block;width:10px;height:10px;background:#f3e8ff;border:1px solid #c4b5fd;border-radius:2px;margin-right:4px"></span>สัปดาห์ 4</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rack progress -->
+  <div class="sec">
+    <div class="sec-hd">
+      <div class="sec-hd-l"><span class="sec-tag" style="background:#15803d">สถานะ Rack</span><span class="sec-ttl">ความคืบหน้าแต่ละ Rack</span></div>
+    </div>
+    <div class="sec-bd" id="rack-progress-list">
+      <div style="color:var(--muted);font-size:13px;text-align:center;padding:1rem">ยังไม่มีข้อมูล — กรุณานำเข้าข้อมูลจาก SAP ก่อน</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     TAB 2: IMPORT SAP
+══════════════════════════════════════════ -->
+<div class="tab" id="tab-import">
+  <div class="info-box">
+    รองรับไฟล์ CSV จาก SAP (รายงาน MB52 / MI01 / MM60) · คอลัมน์: <strong>รหัสวัสดุ, คำอธิบาย, Rack, Location, หน่วย, ยอดSAP</strong>
+    · <a href="#" onclick="downloadTemplate();return false" style="color:#1558a8;font-weight:600">ดาวน์โหลด Template CSV</a>
+  </div>
+
+  <div class="sec">
+    <div class="sec-hd">
+      <div class="sec-hd-l"><span class="sec-tag" style="background:#1558a8">นำเข้า</span><span class="sec-ttl">อัปโหลดไฟล์ CSV จาก SAP</span></div>
+    </div>
+    <div class="sec-bd">
+      <div class="upload-zone" id="upload-zone" onclick="document.getElementById('csv-file').click()" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropFile(event)">
+        <div class="upload-icon">📂</div>
+        <div style="font-size:15px;font-weight:700;color:var(--navy)">คลิกเพื่อเลือกไฟล์ หรือ ลากไฟล์มาวาง</div>
+        <p>รองรับ .csv (UTF-8 / TIS-620) — ขนาดสูงสุด 10MB</p>
+        <p style="margin-top:4px;font-size:12px;color:#94a3b8">คอลัมน์ที่ต้องการ: รหัสวัสดุ · คำอธิบาย · Rack · Location · หน่วย · ยอด SAP</p>
+      </div>
+      <input type="file" id="csv-file" accept=".csv,.txt" style="display:none" onchange="handleCSV(this)">
+      <div id="import-status" style="margin-top:10px;display:none"></div>
+    </div>
+  </div>
+
+  <!-- Column mapping -->
+  <div class="sec" id="col-map-sec" style="display:none">
+    <div class="sec-hd">
+      <div class="sec-hd-l"><span class="sec-tag" style="background:#92400e">จับคู่คอลัมน์</span><span class="sec-ttl">กำหนดคอลัมน์จากไฟล์ SAP</span></div>
+    </div>
+    <div class="sec-bd">
+      <div class="g3" id="col-map-fields"></div>
+      <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-green" onclick="confirmImport()">ยืนยันนำเข้าข้อมูล</button>
+        <button class="btn btn-outline" onclick="cancelImport()">ยกเลิก</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Preview -->
+  <div class="sec" id="preview-sec" style="display:none">
+    <div class="sec-hd">
+      <div class="sec-hd-l"><span class="sec-tag" style="background:#4c1d95">ตัวอย่างข้อมูล</span><span class="sec-ttl">ตัวอย่าง 10 แถวแรก</span></div>
+    </div>
+    <div class="sec-bd">
+      <div class="tw"><table class="dt" id="preview-table"></table></div>
+    </div>
+  </div>
+
+  <!-- Current data -->
+  <div class="sec">
+    <div class="sec-hd">
+      <div class="sec-hd-l"><span class="sec-tag" style="background:#15803d">ข้อมูลปัจจุบัน</span><span class="sec-ttl">รายการอะไหล่ในระบบ (<span id="curr-count">0</span> รายการ)</span></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-sm btn-outline no-print" onclick="exportData()">ส่งออก CSV</button>
+        <button class="btn btn-sm btn-danger no-print" onclick="clearAllData()">ล้างข้อมูลทั้งหมด</button>
+      </div>
+    </div>
+    <div class="sec-bd">
+      <div class="search-bar">
+        <input type="text" id="search-import" placeholder="ค้นหารหัส / ชื่อ / Rack..." oninput="renderImportTable()">
+        <select id="filter-rack-import" onchange="renderImportTable()" style="border:1.5px solid var(--border);border-radius:var(--rs);padding:9px 11px;font-family:inherit;font-size:13px">
+          <option value="">ทุก Rack</option>
+        </select>
+      </div>
+      <div class="tw"><table class="dt" id="import-data-table">
+        <thead><tr><th>#</th><th>รหัสวัสดุ</th><th>คำอธิบาย</th><th>Rack</th><th>Location</th><th>หน่วย</th><th>ยอด SAP</th><th></th></tr></thead>
+        <tbody id="import-tbody"><tr><td colspan="8" style="text-align:center;color:var(--muted);padding:1.5rem">ยังไม่มีข้อมูล</td></tr></tbody>
+      </table></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     TAB 3: SELECT RACK
+══════════════════════════════════════════ -->
+<div class="tab" id="tab-rack">
+  <div class="sec">
+    <div class="sec-hd">
+      <div class="sec-hd-l"><span class="sec-tag" style="background:#1558a8">เลือก Rack</span><span class="sec-ttl">เลือก Rack ที่ต้องการนับ</span></div>
+    </div>
+    <div class="sec-bd">
+      <div class="week-strip" style="margin-bottom:16px">
+        <div class="wk-box wk1" style="cursor:pointer" onclick="selectWeekRacks(1)">
+          <div class="wk-num" style="font-size:12px;font-weight:700">คลิกเลือก สัปดาห์ 1</div>
+          <div class="wk-date">Rack A + B + C</div>
+        </div>
+        <div class="wk-box wk2" style="cursor:pointer" onclick="selectWeekRacks(2)">
+          <div class="wk-num" style="font-size:12px;font-weight:700">คลิกเลือก สัปดาห์ 2</div>
+          <div class="wk-date">Rack D + E + F</div>
+        </div>
+        <div class="wk-box wk3" style="cursor:pointer" onclick="selectWeekRacks(3)">
+          <div class="wk-num" style="font-size:12px;font-weight:700">คลิกเลือก สัปดาห์ 3</div>
+          <div class="wk-date">Rack G + H + I</div>
+        </div>
+        <div class="wk-box wk4" style="cursor:pointer" onclick="selectWeekRacks(4)">
+          <div class="wk-num" style="font-size:12px;font-weight:700">คลิกเลือก สัปดาห์ 4</div>
+          <div class="wk-date">Rack J+K+L+M+N</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+        <button class="btn btn-sm btn-outline" onclick="selectAllRacks()">เลือกทั้งหมด</button>
+        <button class="btn btn-sm btn-outline" onclick="clearRackSelection()">ล้างการเลือก</button>
+        <span style="margin-left:auto;font-size:12.5px;color:var(--muted);align-self:center">เลือกแล้ว: <strong id="selected-count">0</strong> Rack / <strong id="selected-items">0</strong> รายการ</span>
+      </div>
+      <div class="rack-grid" id="rack-grid"></div>
+      <hr class="divider">
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn btn-green" onclick="goToCount()" id="go-count-btn" disabled>เปิดแผ่นนับ →</button>
+        <button class="btn btn-blue" onclick="printCountSheet()" id="print-count-btn" disabled>พิมพ์แผ่นนับ 🖨️</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     TAB 4: COUNT SHEET
+══════════════════════════════════════════ -->
+<div class="tab" id="tab-count">
+  <div class="no-print" style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center">
+    <button class="btn btn-primary" onclick="printCountSheet()">🖨️ พิมพ์แผ่นนับ</button>
+    <button class="btn btn-green" onclick="saveCountData()">💾 บันทึกผลนับ</button>
+    <button class="btn btn-outline" onclick="exportCountCSV()">ส่งออก CSV</button>
+    <button class="btn btn-outline" onclick="switchTab('rack')">← เลือก Rack ใหม่</button>
+    <span style="margin-left:auto;font-size:12.5px;color:var(--muted)">นับแล้ว: <strong id="count-done">0</strong> / <strong id="count-total">0</strong></span>
+  </div>
+  <div id="count-sheet-content"></div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     TAB 5: LOCATION
+══════════════════════════════════════════ -->
+<div class="tab" id="tab-location">
+  <div class="sec">
+    <div class="sec-hd">
+      <div class="sec-hd-l"><span class="sec-tag" style="background:#4c1d95">โลเคชั่น</span><span class="sec-ttl">ระบบโลเคชั่นและแผนที่คลัง</span></div>
+      <button class="btn btn-sm btn-blue no-print" onclick="document.getElementById('loc-url-modal').style.display='flex'">ตั้งค่า URL แผนที่</button>
+    </div>
+    <div class="sec-bd">
+      <div id="loc-map-area">
+        <div style="text-align:center;padding:2rem;color:var(--muted)">
+          <div style="font-size:32px;margin-bottom:8px">🗺️</div>
+          <div style="font-weight:600;margin-bottom:4px">ยังไม่ได้กำหนด URL แผนที่/โลเคชั่น</div>
+          <div style="font-size:12.5px">คลิก "ตั้งค่า URL แผนที่" เพื่อฝัง Google Maps หรือแผนที่ภายใน</div>
+          <button class="btn btn-blue" style="margin-top:12px" onclick="document.getElementById('loc-url-modal').style.display='flex'">ตั้งค่าโลเคชั่น</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-hd">
+      <div class="sec-hd-l"><span class="sec-tag" style="background:#1558a8">โลเคชั่นอะไหล่</span><span class="sec-ttl">ค้นหาตำแหน่งอะไหล่</span></div>
+    </div>
+    <div class="sec-bd">
+      <div class="search-bar">
+        <input type="text" id="search-loc" placeholder="ค้นหารหัส / ชื่อ / Rack / Location..." oninput="renderLocationTable()">
+        <select id="filter-rack-loc" onchange="renderLocationTable()" style="border:1.5px solid var(--border);border-radius:var(--rs);padding:9px 11px;font-family:inherit;font-size:13px">
+          <option value="">ทุก Rack</option>
+        </select>
+      </div>
+      <div class="tw"><table class="dt">
+        <thead><tr><th>รหัสวัสดุ</th><th>คำอธิบาย</th><th>Rack</th><th>Location / ตำแหน่ง</th><th>หน่วย</th><th>ยอด SAP</th><th>Sheets / Maps</th></tr></thead>
+        <tbody id="loc-tbody"><tr><td colspan="7" style="text-align:center;color:var(--muted);padding:1.5rem">ยังไม่มีข้อมูล</td></tr></tbody>
+      </table></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-hd">
+      <div class="sec-hd-l"><span class="sec-tag" style="background:#15803d">จัดการโลเคชั่น</span><span class="sec-ttl">กำหนด URL โลเคชั่นรายอะไหล่</span></div>
+    </div>
+    <div class="sec-bd">
+      <div class="info-box">ข้อมูลโลเคชั่น 876 รายการถูกฝังจาก Google Sheets โดยอัตโนมัติ · เพิ่ม Google Maps URL เพื่อนำทางตำแหน่งเพิ่มเติม · <a href="https://docs.google.com/spreadsheets/d/1h44_6yaYGDpEcfn7KMUiA5PE9zIEEXaMx0pJ5MKEzxU/edit" target="_blank" style="color:#1558a8;font-weight:600">เปิด Sheets ต้นฉบับ ↗</a></div>
+      <div id="loc-editor"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     TAB 6: LABELS
+══════════════════════════════════════════ -->
+<div class="tab" id="tab-labels">
+  <div class="no-print" style="margin-bottom:12px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+    <button class="btn btn-primary" onclick="printLabels()">🖨️ พิมพ์ป้ายที่เลือก</button>
+    <button class="btn btn-outline" onclick="selectAllLabels()">เลือกทั้งหมด</button>
+    <button class="btn btn-outline" onclick="clearLabelSelection()">ล้างการเลือก</button>
+    <select id="label-rack-filter" onchange="renderLabels()" style="border:1.5px solid var(--border);border-radius:var(--rs);padding:8px 11px;font-family:inherit;font-size:13px">
+      <option value="">ทุก Rack</option>
+    </select>
+    <input type="text" id="label-search" placeholder="ค้นหา..." oninput="renderLabels()" style="border:1.5px solid var(--border);border-radius:var(--rs);padding:8px 11px;font-family:inherit;font-size:13px;min-width:160px">
+    <span style="margin-left:auto;font-size:12.5px;color:var(--muted)">เลือก: <strong id="label-sel-count">0</strong> ป้าย</span>
+  </div>
+  <div class="info-box no-print">
+    ป้ายขนาด 6×3 ซม. · 3 คอลัมน์/หน้า A4 · มีรหัส ชื่อ และบาร์โค้ด (Code128)
+  </div>
+  <div class="label-grid" id="label-grid">
+    <div style="color:var(--muted);font-size:13px;padding:2rem;text-align:center;grid-column:1/-1">ยังไม่มีข้อมูล — กรุณานำเข้าข้อมูลจาก SAP ก่อน</div>
+  </div>
+
+  <!-- Print area (hidden on screen) -->
+  <div id="label-print-area" style="display:none"></div>
+</div>
+
+</div><!-- /wrap -->
+
+<!-- ══════ MODALS ══════ -->
+<!-- Location URL modal -->
+<div id="loc-url-modal" style="display:none;position:fixed;inset:0;background:rgba(10,46,90,.55);z-index:200;align-items:center;justify-content:center;padding:1rem">
+  <div style="background:#fff;border-radius:16px;padding:2rem;max-width:500px;width:100%;box-shadow:0 24px 64px rgba(0,0,0,.25)">
+    <h2 style="font-size:16px;font-weight:700;color:var(--navy);margin-bottom:8px">ตั้งค่า URL แผนที่/โลเคชั่น</h2>
+    <p style="font-size:12.5px;color:var(--muted);margin-bottom:16px">วาง URL Google Maps embed หรือ URL แผนที่ภายในของบริษัท</p>
+    <div class="f" style="margin-bottom:12px">
+      <label>URL แผนที่ (Google Maps embed หรือลิงก์ภายใน)</label>
+      <input type="text" id="loc-map-url" placeholder="https://www.google.com/maps/embed?..." style="border:1.5px solid var(--border);border-radius:var(--rs);padding:9px 11px;font-size:13px;font-family:inherit">
+    </div>
+    <div class="f" style="margin-bottom:16px">
+      <label>URL แผนผังคลัง (รูปภาพหรือ iframe)</label>
+      <input type="text" id="loc-warehouse-url" placeholder="https://..." style="border:1.5px solid var(--border);border-radius:var(--rs);padding:9px 11px;font-size:13px;font-family:inherit">
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-green" onclick="saveLocUrl()">บันทึก</button>
+      <button class="btn btn-outline" onclick="document.getElementById('loc-url-modal').style.display='none'">ยกเลิก</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════
+//  DATA STORE
+// ═══════════════════════════════════════════
+const RACKS = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N'];
+const WEEK_PLAN = {1:['A','B','C'],2:['D','E','F'],3:['G','H','I'],4:['J','K','L','M','N']};
+const RACK_WEEK = {};
+Object.entries(WEEK_PLAN).forEach(([w,rs])=>rs.forEach(r=>RACK_WEEK[r]=+w));
+
+let sapData = JSON.parse(localStorage.getItem('sap_data')||'[]');
+let countData = JSON.parse(localStorage.getItem('count_data')||'{}');
+let selectedRacks = JSON.parse(localStorage.getItem('selected_racks')||'[]');
+let locLinks = JSON.parse(localStorage.getItem('loc_links')||'{}');
+let locConfig = JSON.parse(localStorage.getItem('loc_config')||'{"mapUrl":"","warehouseUrl":"https://docs.google.com/spreadsheets/d/1h44_6yaYGDpEcfn7KMUiA5PE9zIEEXaMx0pJ5MKEzxU/htmlview?rm=minimal"}');
+let selectedLabels = new Set();
+
+let csvRaw = null; // raw parsed rows
+let csvHeaders = [];
+
+// ═══════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════
+document.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('hdr-date').textContent = new Date().toLocaleDateString('th-TH',{year:'numeric',month:'long',day:'numeric'});
+  updateStats();
+  renderRackGrid();
+  renderImportTable();
+  renderLocationTable();
+  renderLabels();
+  renderDashRackProgress();
+  loadLocConfig();
+  loadLocUrl();
+});
+
+// ═══════════════════════════════════════════
+//  TABS
+// ═══════════════════════════════════════════
+function switchTab(id){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  const idx = ['dashboard','import','rack','count','location','labels'].indexOf(id);
+  document.querySelectorAll('.tabs button')[idx]?.classList.add('active');
+  if(id==='count') renderCountSheet();
+  if(id==='labels') renderLabels();
+  if(id==='rack') renderRackGrid();
+}
+
+// ═══════════════════════════════════════════
+//  STATS
+// ═══════════════════════════════════════════
+function updateStats(){
+  const total = sapData.length;
+  const counted = sapData.filter(r=>countData[r.matNo]!==undefined).length;
+  const pending = total - counted;
+  document.getElementById('st-total').textContent = total;
+  document.getElementById('st-counted').textContent = counted;
+  document.getElementById('st-pending').textContent = pending;
+  document.getElementById('curr-count').textContent = total;
+  document.getElementById('hdr-total-items').innerHTML = `รายการทั้งหมด: <strong>${total}</strong>`;
+  const pct = total?Math.round(counted/total*100):0;
+  document.getElementById('hdr-progress-pct').innerHTML = `ความคืบหน้า: <strong>${pct}%</strong>`;
+  document.getElementById('dash-pct-text').textContent = `${counted} / ${total} รายการ`;
+  document.getElementById('dash-pct-bar').style.width = pct+'%';
+  renderDashRackProgress();
+  updateRackFilterSelects();
+}
+
+function renderDashRackProgress(){
+  const el = document.getElementById('rack-progress-list');
+  if(!sapData.length){el.innerHTML='<div style="color:var(--muted);font-size:13px;text-align:center;padding:1rem">ยังไม่มีข้อมูล</div>';return;}
+  let html = '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">';
+  RACKS.forEach(r=>{
+    const items = sapData.filter(d=>d.rack===r);
+    const done = items.filter(d=>countData[d.matNo]!==undefined).length;
+    const pct = items.length?Math.round(done/items.length*100):0;
+    const wk = RACK_WEEK[r]||1;
+    const wkColors = {1:'#1e40af',2:'#15803d',3:'#92400e',4:'#6b21a8'};
+    const wkBgs = {1:'#dbeafe',2:'#dcfce7',3:'#fef3c7',4:'#f3e8ff'};
+    html += `<div style="border:1.5px solid var(--border);border-radius:var(--rs);padding:10px 12px;background:#fff">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+        <span style="font-weight:700;color:var(--navy)">Rack ${r}</span>
+        <span style="font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;background:${wkBgs[wk]};color:${wkColors[wk]}">สัปดาห์ ${wk}</span>
+      </div>
+      <div style="font-size:11.5px;color:var(--muted);margin-bottom:4px">${done}/${items.length} รายการ · ${pct}%</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${pct===100?'#15803d':'#1558a8'}"></div></div>
+    </div>`;
+  });
+  html += '</div>';
+  el.innerHTML = html;
+}
+
+// ═══════════════════════════════════════════
+//  CSV IMPORT
+// ═══════════════════════════════════════════
+function dragOver(e){e.preventDefault();document.getElementById('upload-zone').classList.add('drag')}
+function dragLeave(){document.getElementById('upload-zone').classList.remove('drag')}
+function dropFile(e){e.preventDefault();dragLeave();const f=e.dataTransfer.files[0];if(f)processCSVFile(f)}
+function handleCSV(input){if(input.files[0])processCSVFile(input.files[0])}
+
+function processCSVFile(file){
+  const reader = new FileReader();
+  reader.onload = e=>{
+    try{
+      const text = e.target.result;
+      const rows = parseCSV(text);
+      if(rows.length<2){showToast('ไฟล์ว่างหรือรูปแบบไม่ถูกต้อง');return;}
+      csvHeaders = rows[0];
+      csvRaw = rows.slice(1).filter(r=>r.some(c=>c.trim()));
+      showColMapping();
+      showImportStatus(`✅ อ่านไฟล์สำเร็จ: ${csvRaw.length} แถว · ${csvHeaders.length} คอลัมน์`,'green');
+    }catch(err){showImportStatus('❌ ไม่สามารถอ่านไฟล์ได้: '+err.message,'red')}
+  };
+  reader.onerror = ()=>showImportStatus('❌ อ่านไฟล์ล้มเหลว','red');
+  reader.readAsText(file,'UTF-8');
+}
+
+function parseCSV(text){
+  const lines = text.replace(/\r/g,'').split('\n').filter(l=>l.trim());
+  return lines.map(line=>{
+    const cells = [];let cur='';let inQ=false;
+    for(let i=0;i<line.length;i++){
+      if(line[i]==='"'){inQ=!inQ}
+      else if(line[i]===','&&!inQ){cells.push(cur.trim());cur=''}
+      else cur+=line[i];
+    }
+    cells.push(cur.trim());
+    return cells;
+  });
+}
+
+const FIELD_DEFS = [
+  {key:'matNo',label:'รหัสวัสดุ',required:true},
+  {key:'desc',label:'คำอธิบาย',required:true},
+  {key:'rack',label:'Rack / ชั้นวาง',required:true},
+  {key:'location',label:'Location / ตำแหน่ง',required:false},
+  {key:'unit',label:'หน่วย',required:false},
+  {key:'sapQty',label:'ยอด SAP',required:true},
+];
+
+function showColMapping(){
+  document.getElementById('col-map-sec').style.display='block';
+  const opts = csvHeaders.map((h,i)=>`<option value="${i}">${h}</option>`).join('');
+  const noOpt = '<option value="">— ไม่ใช้ —</option>';
+  let html = '';
+  FIELD_DEFS.forEach(f=>{
+    const guessIdx = guessColumn(f.key,csvHeaders);
+    html += `<div class="f"><label>${f.label}${f.required?' *':''}</label>
+      <select id="map-${f.key}" style="border:1.5px solid var(--border);border-radius:var(--rs);padding:9px 11px;font-family:inherit;font-size:13px">
+        ${f.required?'':noOpt}${csvHeaders.map((h,i)=>`<option value="${i}"${i===guessIdx?' selected':''}>${h}</option>`).join('')}
+      </select></div>`;
+  });
+  document.getElementById('col-map-fields').innerHTML = html;
+
+  // preview table
+  document.getElementById('preview-sec').style.display='block';
+  const tbl = document.getElementById('preview-table');
+  const preview = csvRaw.slice(0,10);
+  tbl.innerHTML = `<thead><tr>${csvHeaders.map(h=>`<th>${h}</th>`).join('')}</tr></thead>
+    <tbody>${preview.map(row=>`<tr>${row.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody>`;
+}
+
+function guessColumn(key,headers){
+  const hints = {
+    matNo:['material','mat','รหัสวัสดุ','รหัส','mat no','matno','part no','partno'],
+    desc:['desc','description','คำอธิบาย','ชื่อ','name'],
+    rack:['rack','ชั้น','ชั้นวาง','bin','storage bin'],
+    location:['location','loc','sloc','storage location','คลัง'],
+    unit:['unit','uom','หน่วย','bun','base unit'],
+    sapQty:['qty','quantity','unrestricted','ยอด','stock','จำนวน','sap'],
+  };
+  const hs = hints[key]||[];
+  return headers.findIndex(h=>hs.some(hint=>h.toLowerCase().includes(hint)));
+}
+
+function confirmImport(){
+  const getCol = key=>{const el=document.getElementById('map-'+key);return el?+el.value:-1};
+  const mi={matNo:getCol('matNo'),desc:getCol('desc'),rack:getCol('rack'),location:getCol('location'),unit:getCol('unit'),sapQty:getCol('sapQty')};
+  if(mi.matNo<0||mi.desc<0||mi.rack<0){showToast('กรุณาเลือกคอลัมน์ที่จำเป็น (รหัสวัสดุ, คำอธิบาย, Rack)');return;}
+  const imported = csvRaw.map(row=>({
+    matNo:(row[mi.matNo]||'').trim(),
+    desc:(row[mi.desc]||'').trim(),
+    rack:(row[mi.rack]||'').trim().toUpperCase(),
+    location:mi.location>=0?(row[mi.location]||'').trim():'',
+    unit:mi.unit>=0?(row[mi.unit]||'').trim():'',
+    sapQty:mi.sapQty>=0?parseFloat((row[mi.sapQty]||'0').replace(/,/g,''))||0:0,
+    locationUrl:''
+  })).filter(r=>r.matNo);
+
+  sapData = imported;
+  save();
+  updateStats();
+  renderImportTable();
+  renderRackGrid();
+  renderLabels();
+  document.getElementById('col-map-sec').style.display='none';
+  document.getElementById('preview-sec').style.display='none';
+  showToast(`นำเข้าสำเร็จ ${imported.length} รายการ`);
+}
+
+function cancelImport(){
+  document.getElementById('col-map-sec').style.display='none';
+  document.getElementById('preview-sec').style.display='none';
+  csvRaw=null;
+}
+
+function showImportStatus(msg,type='blue'){
+  const el = document.getElementById('import-status');
+  el.style.display='block';
+  el.innerHTML = `<div style="padding:.75rem 1rem;border-radius:var(--rs);background:${type==='green'?'var(--green-bg)':type==='red'?'var(--red-bg)':'var(--sky)'};border:1px solid ${type==='green'?'var(--green-bd)':type==='red'?'var(--red-bd)':'#93c5fd'};color:${type==='green'?'var(--green)':type==='red'?'var(--red)':'#1558a8'};font-size:12.5px">${msg}</div>`;
+}
+
+function downloadTemplate(){
+  const csv = 'รหัสวัสดุ,คำอธิบาย,Rack,Location,หน่วย,ยอด SAP\n'+
+    '1000001,ชุดคลัทช์ (Clutch Kit),A,A-01-01,SET,5\n'+
+    '1000002,สายพานไทม์มิ่ง (Timing Belt),A,A-01-02,PCS,12\n'+
+    '1000003,น้ำมันเกียร์ (Gear Oil),B,B-02-01,LTR,30\n'+
+    '1000004,ฟิลเตอร์น้ำมัน (Oil Filter),B,B-02-02,PCS,20';
+  const blob = new Blob(['﻿'+csv],{type:'text/csv;charset=utf-8'});
+  const a = document.createElement('a');a.href=URL.createObjectURL(blob);a.download='sap_spare_parts_template.csv';a.click();
+}
+
+function exportData(){
+  if(!sapData.length){showToast('ไม่มีข้อมูลที่จะส่งออก');return;}
+  const header = 'รหัสวัสดุ,คำอธิบาย,Rack,Location,หน่วย,ยอด SAP,ยอดนับ,ผลต่าง,หมายเหตุ';
+  const rows = sapData.map(r=>{
+    const cd = countData[r.matNo];
+    const counted = cd!==undefined?cd.qty:'';
+    const diff = cd!==undefined?cd.qty-r.sapQty:'';
+    return [r.matNo,`"${r.desc}"`,r.rack,r.location,r.unit,r.sapQty,counted,diff,cd?.remark||''].join(',');
+  });
+  const blob = new Blob(['﻿'+header+'\n'+rows.join('\n')],{type:'text/csv;charset=utf-8'});
+  const a = document.createElement('a');a.href=URL.createObjectURL(blob);a.download='spare_parts_count_result.csv';a.click();
+}
+
+function clearAllData(){
+  if(!confirm('ลบข้อมูลทั้งหมด (รายการอะไหล่ + ผลนับ) ยืนยัน?'))return;
+  sapData=[];countData={};selectedRacks=[];save();
+  updateStats();renderImportTable();renderRackGrid();renderLabels();
+  document.getElementById('count-sheet-content').innerHTML='';
+  showToast('ล้างข้อมูลทั้งหมดแล้ว');
+}
+
+// ═══════════════════════════════════════════
+//  IMPORT TABLE
+// ═══════════════════════════════════════════
+function renderImportTable(){
+  const q = document.getElementById('search-import')?.value.toLowerCase()||'';
+  const rf = document.getElementById('filter-rack-import')?.value||'';
+  const tbody = document.getElementById('import-tbody');
+  let data = sapData.filter(r=>{
+    const matchQ = !q||(r.matNo+r.desc+r.rack+r.location).toLowerCase().includes(q);
+    const matchR = !rf||r.rack===rf;
+    return matchQ&&matchR;
+  });
+  if(!data.length){tbody.innerHTML='<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:1.5rem">ไม่พบข้อมูล</td></tr>';return;}
+  tbody.innerHTML = data.slice(0,200).map((r,i)=>{
+    const wk=RACK_WEEK[r.rack]||'—';
+    const wkClass={1:'badge-blue',2:'badge-green',3:'badge-amber',4:'badge-purple'}[wk]||'badge-gray';
+    return `<tr>
+      <td>${i+1}</td>
+      <td><span style="font-weight:600;font-family:monospace">${r.matNo}</span></td>
+      <td>${r.desc}</td>
+      <td><span class="badge ${wkClass}">Rack ${r.rack}</span></td>
+      <td>${r.location||'—'}</td>
+      <td>${r.unit||'—'}</td>
+      <td style="font-weight:600">${r.sapQty}</td>
+      <td><button class="btn btn-sm btn-danger" onclick="deleteItem('${r.matNo}')">ลบ</button></td>
+    </tr>`;
+  }).join('');
+  if(data.length>200) tbody.innerHTML += `<tr><td colspan="8" style="text-align:center;color:var(--muted);font-size:12px;padding:.75rem">แสดง 200 / ${data.length} รายการ (ใช้ตัวกรองเพื่อค้นหา)</td></tr>`;
+}
+
+function deleteItem(matNo){
+  sapData = sapData.filter(r=>r.matNo!==matNo);
+  delete countData[matNo];
+  save();updateStats();renderImportTable();showToast('ลบรายการแล้ว');
+}
+
+// ═══════════════════════════════════════════
+//  RACK GRID
+// ═══════════════════════════════════════════
+function renderRackGrid(){
+  const grid = document.getElementById('rack-grid');
+  const wkColors = {1:'wk1',2:'wk2',3:'wk3',4:'wk4'};
+  grid.innerHTML = RACKS.map(r=>{
+    const items = sapData.filter(d=>d.rack===r).length;
+    const done = sapData.filter(d=>d.rack===r&&countData[d.matNo]!==undefined).length;
+    const wk = RACK_WEEK[r]||1;
+    const sel = selectedRacks.includes(r);
+    return `<div class="rack-card ${sel?'selected':''}" onclick="toggleRack('${r}')" id="rack-card-${r}">
+      <div class="rk-name">Rack ${r}</div>
+      <div class="rk-count">${items} รายการ${items?` · นับ ${done}`:''}</div>
+      <div class="rk-week ${wkColors[wk]}">สัปดาห์ ${wk}</div>
+    </div>`;
+  }).join('');
+  updateRackButtons();
+}
+
+function toggleRack(r){
+  const idx = selectedRacks.indexOf(r);
+  if(idx>=0) selectedRacks.splice(idx,1);
+  else selectedRacks.push(r);
+  save();renderRackGrid();
+}
+
+function selectAllRacks(){selectedRacks=[...RACKS];save();renderRackGrid()}
+function clearRackSelection(){selectedRacks=[];save();renderRackGrid()}
+function selectWeekRacks(w){
+  selectedRacks=[...WEEK_PLAN[w]];save();renderRackGrid();
+  if(document.getElementById('tab-rack').classList.contains('active')){}
+  switchTab('rack');
+  showToast(`เลือก Rack สัปดาห์ ${w}: ${WEEK_PLAN[w].join(', ')}`);
+}
+
+function quickSelectRack(r){
+  if(!selectedRacks.includes(r)) selectedRacks.push(r);
+  else selectedRacks = selectedRacks.filter(x=>x!==r);
+  save();renderRackGrid();
+  // highlight floor plan
+  document.querySelectorAll('.fp-rack').forEach(el=>el.classList.remove('selected-rack'));
+  selectedRacks.forEach(r2=>{const el=document.getElementById('fp-'+r2);if(el)el.classList.add('selected-rack')});
+}
+
+function updateRackButtons(){
+  const selItems = sapData.filter(d=>selectedRacks.includes(d.rack)).length;
+  document.getElementById('selected-count').textContent = selectedRacks.length;
+  document.getElementById('selected-items').textContent = selItems;
+  const disabled = selectedRacks.length===0;
+  document.getElementById('go-count-btn').disabled = disabled;
+  document.getElementById('print-count-btn').disabled = disabled;
+}
+
+function goToCount(){switchTab('count')}
+
+// ═══════════════════════════════════════════
+//  COUNT SHEET
+// ═══════════════════════════════════════════
+function renderCountSheet(){
+  const container = document.getElementById('count-sheet-content');
+  const racks = selectedRacks.length?selectedRacks:RACKS;
+  const items = sapData.filter(d=>racks.includes(d.rack));
+
+  if(!items.length){
+    container.innerHTML='<div class="sec"><div class="sec-bd" style="text-align:center;color:var(--muted);padding:2rem">ไม่มีข้อมูล — กรุณาเลือก Rack ก่อน</div></div>';
+    document.getElementById('count-done').textContent=0;
+    document.getElementById('count-total').textContent=0;
+    return;
+  }
+
+  const today = new Date().toLocaleDateString('th-TH',{year:'numeric',month:'long',day:'numeric'});
+  let done = 0;
+  const byRack = {};
+  racks.forEach(r=>{byRack[r]=items.filter(d=>d.rack===r)});
+
+  let html = `<div class="sec">
+    <div class="sec-hd">
+      <div class="sec-hd-l"><span class="sec-tag" style="background:#0a2e5a">แผ่นนับสต๊อก</span>
+        <span class="sec-ttl">Rack: ${racks.join(', ')} · วันที่: ${today}</span>
+      </div>
+    </div></div>`;
+
+  racks.forEach(r=>{
+    const rItems = byRack[r]||[];
+    if(!rItems.length) return;
+    const wk = RACK_WEEK[r]||1;
+    const wkTag = {1:'#1e40af',2:'#15803d',3:'#92400e',4:'#6b21a8'}[wk];
+    html += `<div class="sec print-pg-break">
+      <div class="sec-hd" style="background:#f0f4ff">
+        <div class="sec-hd-l">
+          <span class="sec-tag" style="background:${wkTag}">Rack ${r}</span>
+          <span class="sec-ttl">${rItems.length} รายการ · สัปดาห์ ${wk}</span>
+        </div>
+        <span style="font-size:11px;color:var(--muted)">ผู้นับ: _________________ วันที่: _____________</span>
+      </div>
+      <div class="sec-bd" style="padding:.5rem .75rem">
+      <div class="tw"><table class="dt">
+        <thead><tr>
+          <th style="width:36px">#</th>
+          <th>รหัสวัสดุ</th>
+          <th>คำอธิบาย</th>
+          <th>Location</th>
+          <th style="text-align:right">ยอด SAP</th>
+          <th style="text-align:center;min-width:90px">ยอดนับจริง</th>
+          <th style="text-align:right;min-width:70px">ผลต่าง</th>
+          <th style="min-width:120px">หมายเหตุ</th>
+        </tr></thead>
+        <tbody>`;
+    rItems.forEach((item,i)=>{
+      const cd = countData[item.matNo];
+      if(cd!==undefined) done++;
+      const qty = cd!==undefined?cd.qty:'';
+      const diff = cd!==undefined?cd.qty-item.sapQty:'';
+      const diffHtml = diff===''?'':`<span class="${diff===0?'diff-zero':diff>0?'diff-plus':'diff-minus'}">${diff>0?'+':''}${diff}</span>`;
+      const remark = cd?.remark||'';
+      html += `<tr class="${cd!==undefined?'counted':''}" id="row-${item.matNo}">
+        <td style="color:var(--muted)">${i+1}</td>
+        <td><span style="font-family:monospace;font-size:12px;font-weight:600">${item.matNo}</span></td>
+        <td>${item.desc}</td>
+        <td style="font-size:12px;color:var(--muted)">${item.location||'—'}</td>
+        <td style="text-align:right;font-weight:600">${item.sapQty}</td>
+        <td style="text-align:center">
+          <input type="number" min="0" step="1" value="${qty}" placeholder="—"
+            onchange="updateCount('${item.matNo}',this.value)"
+            style="width:80px;text-align:center;font-weight:600">
+        </td>
+        <td style="text-align:right">${diffHtml}</td>
+        <td><input type="text" value="${remark}" placeholder="หมายเหตุ..."
+            onchange="updateRemark('${item.matNo}',this.value)"></td>
+      </tr>`;
+    });
+    html += `</tbody></table></div></div></div>`;
+  });
+
+  container.innerHTML = html;
+  document.getElementById('count-done').textContent = done;
+  document.getElementById('count-total').textContent = items.length;
+}
+
+function updateCount(matNo, val){
+  const qty = parseFloat(val);
+  if(isNaN(qty)||val===''){delete countData[matNo]}
+  else{
+    if(!countData[matNo]) countData[matNo]={qty:0,remark:''};
+    countData[matNo].qty = qty;
+  }
+  save();updateStats();
+  // update diff cell live
+  const row = document.getElementById('row-'+matNo);
+  if(row){
+    const item = sapData.find(r=>r.matNo===matNo);
+    if(item){
+      const cd = countData[matNo];
+      const diff = cd!==undefined?cd.qty-item.sapQty:'';
+      const cells = row.querySelectorAll('td');
+      cells[6].innerHTML = diff===''?'':`<span class="${diff===0?'diff-zero':diff>0?'diff-plus':'diff-minus'}">${diff>0?'+':''}${diff}</span>`;
+      row.className = cd!==undefined?'counted':'';
+    }
+  }
+  const done = sapData.filter(d=>selectedRacks.includes(d.rack)&&countData[d.matNo]!==undefined).length;
+  const total = sapData.filter(d=>selectedRacks.includes(d.rack)).length;
+  document.getElementById('count-done').textContent = done;
+  document.getElementById('count-total').textContent = total;
+}
+
+function updateRemark(matNo, val){
+  if(!countData[matNo]) countData[matNo]={qty:0,remark:''};
+  countData[matNo].remark = val;
+  save();
+}
+
+function saveCountData(){save();showToast('บันทึกผลนับสำเร็จ');updateStats()}
+
+function exportCountCSV(){
+  const racks = selectedRacks.length?selectedRacks:RACKS;
+  const items = sapData.filter(d=>racks.includes(d.rack));
+  if(!items.length){showToast('ไม่มีข้อมูล');return;}
+  const header = 'รหัสวัสดุ,คำอธิบาย,Rack,Location,หน่วย,ยอด SAP,ยอดนับจริง,ผลต่าง,หมายเหตุ';
+  const rows = items.map(r=>{
+    const cd = countData[r.matNo];
+    return [r.matNo,`"${r.desc}"`,r.rack,r.location||'',r.unit||'',r.sapQty,
+      cd!==undefined?cd.qty:'',cd!==undefined?cd.qty-r.sapQty:'',cd?.remark||''].join(',');
+  });
+  const blob = new Blob(['﻿'+header+'\n'+rows.join('\n')],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='count_result_rack_'+racks.join('')+'.csv';a.click();
+}
+
+function printCountSheet(){
+  if(!selectedRacks.length&&!sapData.length){showToast('กรุณาเลือก Rack และนำเข้าข้อมูลก่อน');return;}
+  renderCountSheet();
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active','print-active'));
+  document.getElementById('tab-count').classList.add('active','print-active');
+  window.print();
+  setTimeout(()=>{
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('print-active'));
+    switchTab('count');
+  },500);
+}
+
+// ═══════════════════════════════════════════
+//  LOCATION
+// ═══════════════════════════════════════════
+function getLocInfo(matNo){
+  const db = typeof LOCATION_DB!=='undefined'?LOCATION_DB:{};
+  return db[matNo]||null;
+}
+
+function renderLocationTable(){
+  const q = document.getElementById('search-loc')?.value.toLowerCase()||'';
+  const rf = document.getElementById('filter-rack-loc')?.value||'';
+  const tbody = document.getElementById('loc-tbody');
+
+  // If no SAP data but have search query, search in LOCATION_DB directly
+  if(!sapData.length){
+    if(!q){
+      tbody.innerHTML='<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:1.5rem">ยังไม่มีข้อมูล SAP — ค้นหาจาก Sheets โดยตรงด้านล่าง</td></tr>';
+    } else {
+      const db=typeof LOCATION_DB!=='undefined'?LOCATION_DB:{};
+      const matches=Object.entries(db).filter(([m,v])=>m.includes(q)||(v.loc||'').toLowerCase().includes(q)).slice(0,100);
+      tbody.innerHTML=matches.length?matches.map(([m,v])=>`<tr>
+        <td><span style="font-family:monospace;font-size:12px;font-weight:600">${m}</span></td>
+        <td>—</td>
+        <td><span class="badge badge-blue">Rack ${v.rack}</span></td>
+        <td>${v.loc}</td><td>ช่อง ${v.col}</td><td>—</td><td>—</td>
+        <td><a href="https://docs.google.com/spreadsheets/d/1h44_6yaYGDpEcfn7KMUiA5PE9zIEEXaMx0pJ5MKEzxU/htmlview" target="_blank" style="color:#1558a8;font-weight:600;text-decoration:none">📋 ดู Sheets</a></td>
+      </tr>`).join(''):'<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:1rem">ไม่พบรหัส '+q+' ใน Sheets</td></tr>';
+    }
+    renderLocEditor();return;
+  }
+
+  let data = sapData.filter(r=>{
+    const dbInfo=getLocInfo(r.matNo);
+    const locStr=(r.location||'')+(dbInfo?dbInfo.loc:'');
+    const matchQ = !q||(r.matNo+r.desc+r.rack+locStr).toLowerCase().includes(q);
+    const matchR = !rf||r.rack===rf;
+    return matchQ&&matchR;
+  });
+  if(!data.length){tbody.innerHTML='<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:1.5rem">ไม่พบข้อมูล</td></tr>';return;}
+  tbody.innerHTML = data.slice(0,200).map(r=>{
+    const dbInfo=getLocInfo(r.matNo);
+    const locDisplay=dbInfo?`${dbInfo.loc} ช่อง ${dbInfo.col}`:(r.location||'—');
+    const sheetsUrl='https://docs.google.com/spreadsheets/d/1h44_6yaYGDpEcfn7KMUiA5PE9zIEEXaMx0pJ5MKEzxU/htmlview';
+    const url = locLinks[r.location]||r.locationUrl||'';
+    const locHtml=`<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+      ${dbInfo?`<a href="${sheetsUrl}" target="_blank" class="badge badge-blue" style="text-decoration:none">📋 Sheets</a>`:''}
+      ${url?`<a href="${url}" target="_blank" class="badge badge-green" style="text-decoration:none">🗺️ Maps</a>`:''}
+      ${!dbInfo&&!url?'<span style="color:var(--faint)">—</span>':''}
+    </div>`;
+    const wk=RACK_WEEK[r.rack]||'—';
+    const wkClass={1:'badge-blue',2:'badge-green',3:'badge-amber',4:'badge-purple'}[wk]||'badge-gray';
+    return `<tr>
+      <td><span style="font-family:monospace;font-size:12px;font-weight:600">${r.matNo}</span></td>
+      <td>${r.desc}</td>
+      <td><span class="badge ${wkClass}">Rack ${dbInfo?dbInfo.rack:r.rack}</span></td>
+      <td style="font-weight:600">${locDisplay}</td>
+      <td>${r.unit||'—'}</td>
+      <td style="font-weight:600">${r.sapQty}</td>
+      <td>${locHtml}</td>
+    </tr>`;
+  }).join('');
+
+  renderLocEditor();
+}
+
+function renderLocEditor(){
+  const el = document.getElementById('loc-editor');
+  if(!sapData.length){el.innerHTML='<div style="color:var(--muted);text-align:center;padding:1rem">ยังไม่มีข้อมูลอะไหล่</div>';return;}
+  const locs = [...new Set(sapData.map(r=>r.location).filter(Boolean))].sort();
+  if(!locs.length){el.innerHTML='<div style="color:var(--muted);text-align:center;padding:1rem">ไม่มีข้อมูล Location</div>';return;}
+  el.innerHTML = `<div class="g2">${locs.map(loc=>`
+    <div class="f">
+      <label>${loc}</label>
+      <input type="text" value="${locLinks[loc]||''}" placeholder="URL โลเคชั่น (Google Maps / แผนที่ภายใน)"
+        onchange="saveLocLink('${loc}',this.value)" style="border:1.5px solid var(--border);border-radius:var(--rs);padding:8px 10px;font-size:12.5px;font-family:inherit">
+    </div>`).join('')}</div>`;
+}
+
+function saveLocLink(loc, url){
+  locLinks[loc] = url;
+  localStorage.setItem('loc_links',JSON.stringify(locLinks));
+  renderLocationTable();
+  showToast('บันทึก URL สำเร็จ');
+}
+
+function loadLocConfig(){
+  document.getElementById('loc-map-url').value = locConfig.mapUrl||'';
+  document.getElementById('loc-warehouse-url').value = locConfig.warehouseUrl||'';
+}
+
+function saveLocUrl(){
+  locConfig.mapUrl = document.getElementById('loc-map-url').value.trim();
+  locConfig.warehouseUrl = document.getElementById('loc-warehouse-url').value.trim();
+  localStorage.setItem('loc_config',JSON.stringify(locConfig));
+  document.getElementById('loc-url-modal').style.display='none';
+  loadLocUrl();
+  showToast('บันทึก URL แผนที่สำเร็จ');
+}
+
+function loadLocUrl(){
+  const area = document.getElementById('loc-map-area');
+  const sheetsId='1h44_6yaYGDpEcfn7KMUiA5PE9zIEEXaMx0pJ5MKEzxU';
+  const sheetsEmbed=`https://docs.google.com/spreadsheets/d/${sheetsId}/htmlview?rm=minimal`;
+  const sheetsLink=`https://docs.google.com/spreadsheets/d/${sheetsId}/edit`;
+  if(locConfig.mapUrl){
+    area.innerHTML = `<div class="loc-frame"><iframe src="${locConfig.mapUrl}" allowfullscreen loading="lazy"></iframe></div>
+      <p style="font-size:11.5px;color:var(--muted);margin-top:6px;text-align:center">
+        แผนที่โลเคชั่น · <a href="${locConfig.mapUrl}" target="_blank" style="color:#1558a8">เปิดในแท็บใหม่</a>
+        · <button onclick="showSheetsEmbed()" class="btn btn-sm btn-outline" style="font-size:11px;padding:3px 10px">ดู Sheets โลเคชั่น</button>
+      </p>`;
+  } else {
+    area.innerHTML = `
+      <div style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap">
+        <span class="badge badge-blue" style="font-size:12px;padding:4px 10px">📋 ข้อมูลโลเคชั่นจาก Google Sheets · 876 รายการ · 42 ตำแหน่ง</span>
+        <a href="${sheetsLink}" target="_blank" class="btn btn-sm btn-outline" style="text-decoration:none;font-size:11.5px">เปิด Sheets แบบเต็ม ↗</a>
+      </div>
+      <div class="loc-frame"><iframe src="${sheetsEmbed}" allowfullscreen loading="lazy" style="height:480px"></iframe></div>`;
+  }
+}
+
+function showSheetsEmbed(){
+  const sheetsId='1h44_6yaYGDpEcfn7KMUiA5PE9zIEEXaMx0pJ5MKEzxU';
+  const area=document.getElementById('loc-map-area');
+  const cur=area.innerHTML;
+  area.innerHTML=`<div class="loc-frame"><iframe src="https://docs.google.com/spreadsheets/d/${sheetsId}/htmlview?rm=minimal" allowfullscreen loading="lazy" style="height:480px"></iframe></div>
+    <div style="margin-top:6px;text-align:center"><button onclick='document.getElementById("loc-map-area").innerHTML=\`${cur.replace(/`/g,"'")}\`' class="btn btn-sm btn-outline">← กลับ</button></div>`;
+}
+
+// ═══════════════════════════════════════════
+//  LABELS
+// ═══════════════════════════════════════════
+function renderLabels(){
+  const rf = document.getElementById('label-rack-filter')?.value||'';
+  const q = document.getElementById('label-search')?.value.toLowerCase()||'';
+  let data = sapData.filter(r=>{
+    const matchR = !rf||r.rack===rf;
+    const matchQ = !q||(r.matNo+r.desc).toLowerCase().includes(q);
+    return matchR&&matchQ;
+  });
+
+  const grid = document.getElementById('label-grid');
+  if(!data.length){
+    grid.innerHTML='<div style="color:var(--muted);font-size:13px;padding:2rem;text-align:center;grid-column:1/-1">ไม่พบข้อมูล</div>';
+    return;
+  }
+
+  grid.innerHTML = data.slice(0,300).map(r=>`
+    <div class="label-card ${selectedLabels.has(r.matNo)?'selected':''}" id="lcard-${r.matNo}" onclick="toggleLabel('${r.matNo}')">
+      <div class="lc-sel"></div>
+      <div class="lc-code">${r.matNo}</div>
+      <div class="lc-desc">${r.desc}</div>
+      <svg id="bc-${r.matNo.replace(/[^a-z0-9]/gi,'_')}"></svg>
+      <div class="lc-rack">Rack ${r.rack}${r.location?' · '+r.location:''}</div>
+    </div>`).join('');
+
+  // Generate barcodes
+  data.slice(0,300).forEach(r=>{
+    const svgId = 'bc-'+r.matNo.replace(/[^a-z0-9]/gi,'_');
+    const el = document.getElementById(svgId);
+    if(el&&r.matNo){
+      try{
+        JsBarcode(el, r.matNo, {
+          format:'CODE128',height:36,displayValue:false,margin:2,
+          lineColor:'#0a2e5a',background:'transparent'
+        });
+      }catch(e){el.innerHTML=''}
+    }
+  });
+
+  document.getElementById('label-sel-count').textContent = selectedLabels.size;
+}
+
+function toggleLabel(matNo){
+  if(selectedLabels.has(matNo)) selectedLabels.delete(matNo);
+  else selectedLabels.add(matNo);
+  const card = document.getElementById('lcard-'+matNo);
+  if(card) card.classList.toggle('selected',selectedLabels.has(matNo));
+  document.getElementById('label-sel-count').textContent = selectedLabels.size;
+}
+
+function selectAllLabels(){
+  const rf = document.getElementById('label-rack-filter')?.value||'';
+  const q = document.getElementById('label-search')?.value.toLowerCase()||'';
+  sapData.filter(r=>(!rf||r.rack===rf)&&(!q||(r.matNo+r.desc).toLowerCase().includes(q)))
+    .slice(0,300).forEach(r=>selectedLabels.add(r.matNo));
+  renderLabels();
+}
+function clearLabelSelection(){selectedLabels.clear();renderLabels()}
+
+function printLabels(){
+  const toprint = sapData.filter(r=>selectedLabels.has(r.matNo));
+  if(!toprint.length){showToast('กรุณาเลือกอะไหล่ที่ต้องการพิมพ์ป้าย');return;}
+
+  const area = document.getElementById('label-print-area');
+  area.innerHTML = `<div class="label-print-area" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6mm;padding:8mm">
+    ${toprint.map(r=>`
+      <div class="label-print-card" style="border:1px solid #ccc;border-radius:4px;padding:7px;text-align:center;break-inside:avoid">
+        <div class="lp-code" style="font-size:9pt;font-weight:700;font-family:monospace">${r.matNo}</div>
+        <div class="lp-desc" style="font-size:7.5pt;color:#444;margin:2px 0 4px;line-height:1.3">${r.desc}</div>
+        <svg id="bcp-${r.matNo.replace(/[^a-z0-9]/gi,'_')}" style="height:32px;max-width:100%"></svg>
+        <div class="lp-rack" style="font-size:7pt;color:#666;margin-top:3px">Rack ${r.rack}${r.location?' · '+r.location:''}</div>
+      </div>`).join('')}
+  </div>`;
+
+  // Generate barcodes in print area
+  toprint.forEach(r=>{
+    const svgId = 'bcp-'+r.matNo.replace(/[^a-z0-9]/gi,'_');
+    const el = document.getElementById(svgId);
+    if(el){
+      try{JsBarcode(el,r.matNo,{format:'CODE128',height:28,displayValue:false,margin:1,lineColor:'#000',background:'#fff'})}
+      catch(e){}
+    }
+  });
+
+  area.style.display='block';
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active','print-active'));
+  area.classList.add('print-active');
+  setTimeout(()=>{
+    window.print();
+    setTimeout(()=>{
+      area.style.display='none';
+      area.classList.remove('print-active');
+      switchTab('labels');
+    },600);
+  },300);
+}
+
+// ═══════════════════════════════════════════
+//  UTILITIES
+// ═══════════════════════════════════════════
+function updateRackFilterSelects(){
+  const racks = [...new Set(sapData.map(r=>r.rack))].sort();
+  const opts = '<option value="">ทุก Rack</option>'+racks.map(r=>`<option value="${r}">Rack ${r}</option>`).join('');
+  ['filter-rack-import','filter-rack-loc','label-rack-filter'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.innerHTML=opts;
+  });
+}
+
+function save(){
+  localStorage.setItem('sap_data',JSON.stringify(sapData));
+  localStorage.setItem('count_data',JSON.stringify(countData));
+  localStorage.setItem('selected_racks',JSON.stringify(selectedRacks));
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2800);
+}
+</script>
+</body>
+</html>
