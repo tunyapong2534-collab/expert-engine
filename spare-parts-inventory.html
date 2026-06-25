@@ -346,6 +346,17 @@ const LOCATION_DB = {"31184741": {"rack": "A", "loc": "AA02", "col": 2}, "311847
      TAB 2: IMPORT SAP
 ══════════════════════════════════════════ -->
 <div class="tab" id="tab-import">
+  <!-- Quick Start Banner -->
+  <div style="background:linear-gradient(135deg,#0a2e5a,#1558a8);border-radius:var(--r);padding:1.25rem 1.5rem;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+    <div>
+      <div style="color:#fff;font-size:15px;font-weight:700;margin-bottom:4px">เริ่มใช้งานได้ทันที</div>
+      <div style="color:rgba(255,255,255,.75);font-size:12.5px">โหลดข้อมูลตัวอย่าง 73 รายการ ครอบคลุม Rack A-N เพื่อทดสอบระบบก่อนนำเข้าข้อมูล SAP จริง</div>
+    </div>
+    <button class="btn btn-amber" onclick="loadDemoData()" style="font-size:13.5px;padding:10px 22px;flex-shrink:0">
+      โหลดข้อมูลตัวอย่าง (73 รายการ)
+    </button>
+  </div>
+
   <div class="info-box">
     รองรับไฟล์ CSV จาก SAP (รายงาน MB52 / MI01 / MM60) · คอลัมน์: <strong>รหัสวัสดุ, คำอธิบาย, Rack, Location, หน่วย, ยอดSAP</strong>
     · <a href="#" onclick="downloadTemplate();return false" style="color:#1558a8;font-weight:600">ดาวน์โหลด Template CSV</a>
@@ -782,6 +793,89 @@ function showImportStatus(msg,type='blue'){
   const el = document.getElementById('import-status');
   el.style.display='block';
   el.innerHTML = `<div style="padding:.75rem 1rem;border-radius:var(--rs);background:${type==='green'?'var(--green-bg)':type==='red'?'var(--red-bg)':'var(--sky)'};border:1px solid ${type==='green'?'var(--green-bd)':type==='red'?'var(--red-bd)':'#93c5fd'};color:${type==='green'?'var(--green)':type==='red'?'var(--red)':'#1558a8'};font-size:12.5px">${msg}</div>`;
+}
+
+function loadDemoData(){
+  if(sapData.length&&!confirm('มีข้อมูลอยู่แล้ว '+sapData.length+' รายการ\nต้องการแทนที่ด้วยข้อมูลตัวอย่างหรือไม่?'))return;
+  const demo=[
+    {matNo:'31184741',desc:'Linking chuck No.20 9702383 NL-21',rack:'A',location:'AA02',unit:'PCS',sapQty:3,locationUrl:''},
+    {matNo:'31184743',desc:'Linking chuck #18 9703409',rack:'A',location:'AA02',unit:'PCS',sapQty:2,locationUrl:''},
+    {matNo:'31188242',desc:'Screw hexsoc Coppoin 9711428',rack:'A',location:'AA02',unit:'PCS',sapQty:50,locationUrl:''},
+    {matNo:'31188247',desc:'Bush 9723743',rack:'A',location:'AA02',unit:'PCS',sapQty:10,locationUrl:''},
+    {matNo:'31191782',desc:'Pressure spring D1=18.5 Drd.119781101800',rack:'A',location:'AA02',unit:'PCS',sapQty:8,locationUrl:''},
+    {matNo:'31187286',desc:'Adjusting ring S109.54',rack:'A',location:'AA02',unit:'PCS',sapQty:5,locationUrl:''},
+    {matNo:'31194015',desc:'Fitting ต่อตรง 10 MM. เกลียว 1/8"',rack:'A',location:'AA03',unit:'PCS',sapQty:15,locationUrl:''},
+    {matNo:'31194023',desc:'Fitting ข้องอ 12 mm. เกลียว 1/8"',rack:'A',location:'AA03',unit:'PCS',sapQty:12,locationUrl:''},
+    {matNo:'31194027',desc:'Fitting ข้องอ 8 mm. เกลียว 1/2"',rack:'A',location:'AA03',unit:'PCS',sapQty:8,locationUrl:''},
+    {matNo:'31194031',desc:'Union Y 12 Different 10',rack:'A',location:'AA03',unit:'PCS',sapQty:6,locationUrl:''},
+    {matNo:'31423324',desc:'V-belt 06X4 GL=03005 BL SMOOTH [1809013]',rack:'B',location:'BB01',unit:'PCS',sapQty:3,locationUrl:''},
+    {matNo:'31451115',desc:'Inline Gearbox Bevel 9731934',rack:'B',location:'BB01',unit:'PCS',sapQty:1,locationUrl:''},
+    {matNo:'31451113',desc:'Inline Gearbox Looper-Large Bore 9733760',rack:'B',location:'BB02',unit:'PCS',sapQty:1,locationUrl:''},
+    {matNo:'31448975',desc:'Chain-Linker 6 Cell 12P/6C SS T3 9833565',rack:'B',location:'BB02',unit:'PCS',sapQty:2,locationUrl:''},
+    {matNo:'31257241',desc:'Globe Valve 1": 532 25D-8-90-5-1-1+1300',rack:'C',location:'CA03',unit:'PCS',sapQty:2,locationUrl:''},
+    {matNo:'31259044',desc:'Air Filter Element 54672522',rack:'C',location:'CA03',unit:'PCS',sapQty:3,locationUrl:''},
+    {matNo:'31271481',desc:'BEARING SEALMASTER S-3080-M43',rack:'C',location:'CA03',unit:'PCS',sapQty:1,locationUrl:''},
+    {matNo:'31271482',desc:'BEARING SEALMASTER S-3081-M43',rack:'C',location:'CA03',unit:'PCS',sapQty:1,locationUrl:''},
+    {matNo:'31291517',desc:'Sealing Bush and Bush Cover',rack:'C',location:'CA03',unit:'PCS',sapQty:4,locationUrl:''},
+    {matNo:'31262414',desc:'Cylinder CRDSNU-50-100-PPS-A-A1',rack:'C',location:'CA03',unit:'PCS',sapQty:2,locationUrl:''},
+    {matNo:'31357291',desc:'BEARING PBS SS.KFL004(SFL004) 20MM.',rack:'E',location:'EA01',unit:'PCS',sapQty:5,locationUrl:''},
+    {matNo:'31359297',desc:'Gasket Set [19181271703]',rack:'E',location:'EA01',unit:'SET',sapQty:3,locationUrl:''},
+    {matNo:'31356078',desc:'Pressure sensor ifm PI2894 1-10 bar.',rack:'E',location:'EA01',unit:'PCS',sapQty:2,locationUrl:''},
+    {matNo:'31357563',desc:'Round belt 04 GL=00912 70SH [1805910]',rack:'E',location:'EA01',unit:'PCS',sapQty:4,locationUrl:''},
+    {matNo:'31350309',desc:'Cog-wheel [105845191]',rack:'E',location:'EA01',unit:'PCS',sapQty:3,locationUrl:''},
+    {matNo:'31353571',desc:'Gearbox [5537772.001]',rack:'E',location:'EA01',unit:'PCS',sapQty:1,locationUrl:''},
+    {matNo:'31348749',desc:'เฟือง27TB SUS316หนา11.7mmลูกปืนOD65MM',rack:'E',location:'EA02',unit:'PCS',sapQty:2,locationUrl:''},
+    {matNo:'31348750',desc:'เฟือง27TB SUS316หนา11.7mmลูกปืนOD60MM',rack:'E',location:'EA02',unit:'PCS',sapQty:2,locationUrl:''},
+    {matNo:'31349496',desc:'Cable labller SPVVA103877800',rack:'E',location:'EA01',unit:'PCS',sapQty:1,locationUrl:''},
+    {matNo:'31230965',desc:'Timing Belt 50ATK10-K13 ยาว 4.90 M.',rack:'F',location:'FA01',unit:'PCS',sapQty:2,locationUrl:''},
+    {matNo:'31230966',desc:'Timing Belt 50ATK10-K13 ยาว 6.96 M.',rack:'F',location:'FA01',unit:'PCS',sapQty:1,locationUrl:''},
+    {matNo:'31230967',desc:'Timing Belt 100ATK20-K13 ยาว 26.70 M',rack:'F',location:'FA01',unit:'PCS',sapQty:1,locationUrl:''},
+    {matNo:'31230558',desc:'Transport belt 107547873',rack:'F',location:'FA02',unit:'M',sapQty:5,locationUrl:''},
+    {matNo:'31452963',desc:'Inner Ring S16008 I8200153 50x55x20',rack:'G',location:'GA01',unit:'PCS',sapQty:3,locationUrl:''},
+    {matNo:'31452957',desc:'Inner ring I7400001 50x55x25',rack:'G',location:'GA01',unit:'PCS',sapQty:2,locationUrl:''},
+    {matNo:'31452960',desc:'Shaft Seal I8200080 45x70x10',rack:'G',location:'GA01',unit:'PCS',sapQty:4,locationUrl:''},
+    {matNo:'31454965',desc:'Cylinder DSNU-40-30-PPS-A [193993]',rack:'G',location:'GA01',unit:'PCS',sapQty:2,locationUrl:''},
+    {matNo:'31454963',desc:'Solenoid VUVS-L20-M52-AZD',rack:'G',location:'GA01',unit:'PCS',sapQty:5,locationUrl:''},
+    {matNo:'31452956',desc:'Shaft I8200114 56112-041314',rack:'G',location:'GA02',unit:'PCS',sapQty:1,locationUrl:''},
+    {matNo:'31455323',desc:'Linker Chain SSS 11 Cell 7 P 9759008',rack:'G',location:'GA02',unit:'PCS',sapQty:3,locationUrl:''},
+    {matNo:'31341423',desc:'EUROBELT S-E50 S50FTB240L5 240 mm.',rack:'G',location:'GA02',unit:'PCS',sapQty:2,locationUrl:''},
+    {matNo:'31460710',desc:'Transp.Cog belt T05/02230 18060411',rack:'H',location:'HA01',unit:'PCS',sapQty:4,locationUrl:''},
+    {matNo:'31460713',desc:'Toothed belt T05, L=275, B=16, 55T',rack:'H',location:'HA01',unit:'PCS',sapQty:3,locationUrl:''},
+    {matNo:'31460709',desc:'Bearing 31111-109050 [N2100074]',rack:'H',location:'HA01',unit:'PCS',sapQty:6,locationUrl:''},
+    {matNo:'31460887',desc:'Cable For Sensor E66000039',rack:'H',location:'HA03',unit:'PCS',sapQty:10,locationUrl:''},
+    {matNo:'31460886',desc:'3-Way Ball Valve 42630-600014 N6500161',rack:'H',location:'HA03',unit:'PCS',sapQty:2,locationUrl:''},
+    {matNo:'31451948',desc:'Donut coupling 1/2 9730872',rack:'I',location:'IA01',unit:'PCS',sapQty:4,locationUrl:''},
+    {matNo:'31452959',desc:'Muti-Seal S27013 N7900166',rack:'I',location:'IA01',unit:'PCS',sapQty:6,locationUrl:''},
+    {matNo:'31452962',desc:'Bearing I8200072 56112-014518',rack:'I',location:'IA01',unit:'PCS',sapQty:3,locationUrl:''},
+    {matNo:'31452964',desc:'Shaft Seal 56112-016108 8200076 50x80x10',rack:'I',location:'IA01',unit:'PCS',sapQty:4,locationUrl:''},
+    {matNo:'31454970',desc:'Cylinder DFM-50-25-P-A-GF [170871]',rack:'I',location:'IA01',unit:'PCS',sapQty:2,locationUrl:''},
+    {matNo:'31467657',desc:'สายพานสแตนเลส Stainless V-belt',rack:'J',location:'JB03',unit:'PCS',sapQty:3,locationUrl:''},
+    {matNo:'31467076',desc:'El-belt L0=00403 (L1=00420) Bb [1807654]',rack:'J',location:'JB03',unit:'PCS',sapQty:2,locationUrl:''},
+    {matNo:'31454561',desc:'AIR CYLINDER CG5EN32TFSR-140',rack:'J',location:'JB03',unit:'PCS',sapQty:4,locationUrl:''},
+    {matNo:'31454562',desc:'AIR CYLINDER CG5EN32TFSR-90',rack:'J',location:'JB03',unit:'PCS',sapQty:1,locationUrl:''},
+    {matNo:'31460706',desc:'Knife steel [SPVVA110196800]',rack:'J',location:'JB02',unit:'PCS',sapQty:2,locationUrl:''},
+    {matNo:'31470480',desc:'Bearing31117-003204 [N2100043]',rack:'K',location:'KA01',unit:'PCS',sapQty:4,locationUrl:''},
+    {matNo:'31466633',desc:'CLEANING BALL DN [N4900266]',rack:'K',location:'KA01',unit:'PCS',sapQty:10,locationUrl:''},
+    {matNo:'31466747',desc:'Transport belt [107612140]',rack:'K',location:'KA01',unit:'M',sapQty:3,locationUrl:''},
+    {matNo:'31461820',desc:'Press-on roller [108054694]',rack:'K',location:'KA01',unit:'PCS',sapQty:6,locationUrl:''},
+    {matNo:'31472058',desc:'Load Cell 20 Kg RLCC with Zemi [1083774]',rack:'K',location:'KA01',unit:'PCS',sapQty:2,locationUrl:''},
+    {matNo:'31466656',desc:'DRIVE WHEEL [V302644]',rack:'K',location:'KA02',unit:'PCS',sapQty:3,locationUrl:''},
+    {matNo:'31474617',desc:'Thermocouple with cable[SPVVA101426600]',rack:'K',location:'KA02',unit:'PCS',sapQty:2,locationUrl:''},
+    {matNo:'31471667',desc:'Air cylinder CQ2A20-10DCM',rack:'L',location:'LB01',unit:'PCS',sapQty:4,locationUrl:''},
+    {matNo:'31466655',desc:'WT99S-0302259 DISTANCE RING [V302259]',rack:'L',location:'LB01',unit:'PCS',sapQty:8,locationUrl:''},
+    {matNo:'31474391',desc:'illuminatedpushbuttongreen E60100025',rack:'L',location:'LB01',unit:'PCS',sapQty:5,locationUrl:''},
+    {matNo:'31495866',desc:'Q-RING I175C 33411-164035 [N7200034]',rack:'L',location:'LB01',unit:'PCS',sapQty:3,locationUrl:''},
+    {matNo:'31568712',desc:'Worm-Gear flange [500004]',rack:'L',location:'LB01',unit:'PCS',sapQty:2,locationUrl:''},
+    {matNo:'31273949',desc:'RODLESS METAL WORK CIL2770632160CV',rack:'M',location:'SPL020101',unit:'PCS',sapQty:1,locationUrl:''},
+    {matNo:'31423352',desc:'Pump L1000-P4 400 V 50 Hz, 4 kW',rack:'M',location:'SPL020101',unit:'PCS',sapQty:1,locationUrl:''},
+    {matNo:'31461679',desc:'Vacuum Pump Busch KB 0040 D IZ0 SFZH',rack:'M',location:'SPL020101',unit:'PCS',sapQty:1,locationUrl:''},
+    {matNo:'31454969',desc:'Cylinder DGC-K-40-1865-PPV [1312503]',rack:'M',location:'SPL020101',unit:'PCS',sapQty:1,locationUrl:''},
+    {matNo:'31230014',desc:'Servo Motor MPF-B330P-MJ72BA',rack:'N',location:'NA01',unit:'PCS',sapQty:1,locationUrl:''},
+  ];
+  sapData=demo;countData={};
+  save();updateStats();renderImportTable();renderRackGrid();renderLabels();
+  showToast('โหลดข้อมูลตัวอย่าง 73 รายการ ครอบคลุม Rack A-N สำเร็จ');
+  switchTab('dashboard');
 }
 
 function downloadTemplate(){
