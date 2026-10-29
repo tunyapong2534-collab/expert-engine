@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Liquid Glass Example</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="glass.css" />
+    <style>
+      /* Colorful background so the glass has something to refract */
+      .backdrop {
+        height: 160vh;
+        background:
+          repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.25) 0 2px, transparent 2px 40px),
+          linear-gradient(135deg, #ff6b6b, #feca57 35%, #48dbfb 65%, #5f27cd);
+      }
+      .backdrop h1 {
+        margin: 0;
+        padding: 40px 24px 0;
+        font-size: 64px;
+        color: white;
+      }
+      /* Glass elements float above the page */
+      .overlay {
+        position: fixed;
+        top: 180px;
+        left: 24px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 32px;
+        z-index: 10;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="backdrop"><h1>Liquid Glass</h1></div>
+    <div class="overlay" id="overlay"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script src="container.js"></script>
+    <script src="button.js"></script>
+    <script>
+      const overlay = document.getElementById('overlay')
+
+      // 1) A single glass button
+      const hello = new Button({
+        text: 'Hello Glass',
+        size: 32,
+        type: 'rounded',
+        onClick: text => alert(`You clicked: ${text}`)
+      })
+      overlay.appendChild(hello.element)
+
+      // 2) A pill container with nested glass buttons
+      const bar = new Container({ type: 'pill', borderRadius: 24, tintOpacity: 0.3 })
+      bar.addChild(new Button({ text: '▶', size: 24, type: 'circle' }))
+      bar.addChild(new Button({ text: 'Play all', size: 24, type: 'pill', warp: true }))
+      overlay.appendChild(bar.element)
+    </script>
+  </body>
+</html>
